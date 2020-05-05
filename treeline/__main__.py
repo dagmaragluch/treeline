@@ -1,2 +1,5 @@
+from treeline.engine.engine import Engine
+
 if __name__ == '__main__':
-    print("The game starts here")
+    engine = Engine()
+    engine.start()
