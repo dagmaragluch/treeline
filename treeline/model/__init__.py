@@ -1,1 +1,3 @@
-# Init
+"""
+Module for game model
+"""
