@@ -31,19 +31,19 @@ class Engine:
                         self._quit()
                 if event.type in self.events:
                     for actor in self.events[event.type]:
-                        actor.onEvent(event)
+                        actor.on_event(event)
 
     def _quit(self):
         self.running = False
         self.logger.info("Stopping engine on demand")
 
-    def setCamera(self, camera: Camera):
+    def set_camera(self, camera: Camera):
         self.camera = camera
 
-    def addActor(self, actor: Actor):
+    def add_actor(self, actor: Actor):
         self.actors.append(actor)
 
-    def registerForEvent(self, actor: Actor, eventType: int):
+    def register_for_event(self, actor: Actor, eventType: int):
         if eventType in self.events:
             self.events[eventType].append(actor)
         else:
