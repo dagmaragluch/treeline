@@ -1,7 +1,11 @@
 from enum import Enum
+from typing import (
+    Tuple,
+)
 
 from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
+from treeline.engine.actor import Actor
 
 
 class Terrain(Enum):
@@ -10,8 +14,13 @@ class Terrain(Enum):
     mountain = 3
 
 
-class Field:
-    def __init__(self, terrain: Terrain):
+class Field(Actor):
+    def __init__(
+            self,
+            position: Tuple[int, int],
+            terrain: Terrain
+    ):
+        Actor.__init__(self, position)
         self.terrain = terrain
 
     def get_resources(self) -> Resources:
