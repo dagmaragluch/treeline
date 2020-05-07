@@ -3,11 +3,12 @@ import logging
 from treeline.engine.actor import Actor
 from treeline.engine.camera import Camera
 
+LOGGER = logging.getLogger(__name__)
+
+
 class Engine:
 
     def __init__(self):
-        self.logger = logging.getLogger("ENGINE")
-        self.logger.setLevel(logging.DEBUG)
         pygame.init()
         pygame.display.set_caption("Treeline")
         self.running = False
@@ -18,7 +19,7 @@ class Engine:
     def start(self):
         self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
         if not self.camera:
-            self.logger.error("No camera set before engine started: aborting")
+            LOGGER.error("No camera set before engine started: aborting")
             return
 
         self.running = True
@@ -35,7 +36,7 @@ class Engine:
 
     def _quit(self):
         self.running = False
-        self.logger.info("Stopping engine on demand")
+        LOGGER.info("Stopping engine on demand")
 
     def set_camera(self, camera: Camera):
         self.camera = camera
