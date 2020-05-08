@@ -16,7 +16,7 @@ class Hexagon(Polygon):
         points = []
         for i in range(6):
             d = radians((360 / 6) * i)
-            points.append((int(cos(d) * size / 2), int(sin(d) * size / 2)))
+            points.append((int(sin(d) * size / 2), int(cos(d) * size / 2)))
 
         print(points)
 
