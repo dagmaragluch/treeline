@@ -7,4 +7,3 @@ class Camera(Actor):
 
     def __init__(self, position: Tuple[int, int]):
         Actor.__init__(self, position)
-        pass

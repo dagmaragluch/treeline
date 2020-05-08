@@ -1,12 +1,14 @@
 from typing import (
     Tuple,
 )
+from treeline.engine.shape import Shape
 
 
 class Actor:
 
-    def __init__(self, position: Tuple[int, int]):
+    def __init__(self, position: Tuple[int, int] = None, shape: Shape = None):
         self.position = position
+        self.shape = shape
 
     def on_event(self, event):
         """

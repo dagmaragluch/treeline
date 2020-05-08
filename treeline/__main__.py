@@ -1,6 +1,7 @@
 from treeline.engine.engine import Engine
 from treeline.engine.camera import Camera
 from treeline.engine.actor import Actor
+from treeline.misc.shapes import Hexagon
 import pygame
 
 
@@ -14,7 +15,8 @@ if __name__ == '__main__':
     engine = Engine()
     camera = Camera((0, 0))
     engine.set_camera(camera)
-    testActor = TestActor((1, 1))
+    testActor = TestActor((100, 100))
+    testActor.shape = Hexagon()
     engine.add_actor(testActor)
     engine.register_for_event(testActor, pygame.KEYDOWN)
     engine.start()
