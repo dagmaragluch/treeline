@@ -38,7 +38,8 @@ class Engine:
                     for actor in self.events[event.type]:
                         actor.on_event(event)
             for actor in self.actors:
-                actor.shape.draw(actor.position, self.screen)
+                if actor.shape:
+                    actor.shape.draw(actor.position, self.screen)
             pygame.display.flip()
 
     def _quit(self):
