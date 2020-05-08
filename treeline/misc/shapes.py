@@ -7,7 +7,8 @@ File containing handful definitions all graphics will be drawn.
 '''
 
 DEFAULT_HEX_COLOR = (26, 107, 25)
-DEFAULT_HEX_SIZE = 100 # diagonal
+DEFAULT_HEX_SIZE = 100  # diagonal
+
 
 class Hexagon(Polygon):
 
