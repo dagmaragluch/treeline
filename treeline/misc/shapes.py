@@ -18,6 +18,4 @@ class Hexagon(Polygon):
             d = radians((360 / 6) * i)
             points.append((int(sin(d) * size / 2), int(cos(d) * size / 2)))
 
-        print(points)
-
         Polygon.__init__(self, points, color)
