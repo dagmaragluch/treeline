@@ -2,6 +2,7 @@ import pygame
 import logging
 from treeline.engine.actor import Actor
 from treeline.engine.camera import Camera
+import numpy as np
 
 LOGGER = logging.getLogger(__name__)
 BACKGROUND_COLOR = (66, 135, 245)
@@ -26,6 +27,10 @@ class Engine:
             LOGGER.error("No camera set before engine started: aborting")
             return
 
+        screenSize = np.array(pygame.display.get_surface().get_size())
+        LOGGER.debug(f"Screen size: {screenSize}")
+        self.camera.setup(screenSize)
+
         self.running = True
         while self.running:
             for event in pygame.event.get():
@@ -39,7 +44,7 @@ class Engine:
                         actor.on_event(event)
             for actor in self.actors:
                 if actor.shape:
-                    actor.shape.draw(actor.position, self.screen)
+                    actor.shape.draw(self.camera.transform(actor.position), self.screen)
             pygame.display.flip()
 
     def _quit(self):

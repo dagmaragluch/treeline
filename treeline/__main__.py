@@ -15,8 +15,7 @@ if __name__ == '__main__':
     engine = Engine()
     camera = Camera((0, 0))
     engine.set_camera(camera)
-    testActor = TestActor((100, 200), Hexagon())
-    testActor1 = TestActor((150, 250), Hexagon())
-    engine.add_actor(testActor)
-    engine.register_for_event(testActor, pygame.KEYDOWN)
+    for i, j in [(0, 0), (1, 1)]:
+        testActor = TestActor((i, j), Hexagon(color=(100 + i*100, 100, 100)))
+        engine.add_actor(testActor)
     engine.start()
