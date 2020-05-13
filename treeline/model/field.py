@@ -6,6 +6,7 @@ from typing import (
 from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
+from treeline.model.building import Building
 
 
 class Terrain(Enum):
@@ -18,10 +19,12 @@ class Field(Actor):
     def __init__(
             self,
             position: Tuple[int, int],
-            terrain: Terrain
+            terrain: Terrain,
+            building: Building
     ):
         Actor.__init__(self, position)
         self.terrain = terrain
+        self.building = building
 
     def get_resources(self) -> Resources:
         produced_resources = Resources()
@@ -33,4 +36,5 @@ class Field(Actor):
         elif self.terrain == Terrain.mountain:
             produced_resources.add_resource(ResourceType.iron, 1)
 
+        produced_resources += self.building.get_resources()
         return produced_resources
