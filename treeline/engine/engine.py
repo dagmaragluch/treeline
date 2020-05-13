@@ -3,6 +3,7 @@ import logging
 from treeline.engine.actor import Actor
 from treeline.engine.camera import Camera
 import numpy as np
+from datetime import datetime
 
 LOGGER = logging.getLogger(__name__)
 BACKGROUND_COLOR = (66, 135, 245)
@@ -17,22 +18,27 @@ class Engine:
         self.camera = None
         self.actors = []
         self.events = {}
+        self.keyWatchers = []
 
     def start(self):
         self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
-
-        self.screen.fill(BACKGROUND_COLOR)
 
         if not self.camera:
             LOGGER.error("No camera set before engine started: aborting")
             return
 
-        screenSize = np.array(pygame.display.get_surface().get_size())
+        screenSize = pygame.display.get_surface().get_size()
         LOGGER.debug(f"Screen size: {screenSize}")
         self.camera.setup(screenSize)
 
         self.running = True
+        thisFrameTime = datetime.now()
+        prevFrameTime = thisFrameTime
         while self.running:
+            thisFrameTime = datetime.now()
+            deltaTime = (thisFrameTime - prevFrameTime).total_seconds() * 1000.0
+            if deltaTime > 33:
+                LOGGER.warn(f"FPS dropped below 30 (deltaTime: {deltaTime})")
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self._quit()
@@ -42,10 +48,15 @@ class Engine:
                 if event.type in self.events:
                     for actor in self.events[event.type]:
                         actor.on_event(event)
+            keys = pygame.key.get_pressed()
+            for actor in self.keyWatchers:
+                actor.on_key(keys, deltaTime)
+            self.screen.fill(BACKGROUND_COLOR)
             for actor in self.actors:
                 if actor.shape:
                     actor.shape.draw(self.camera.transform(actor.position), self.screen)
             pygame.display.flip()
+            prevFrameTime = thisFrameTime
 
     def _quit(self):
         self.running = False
@@ -62,3 +73,7 @@ class Engine:
             self.events[eventType].append(actor)
         else:
             self.events[eventType] = [actor]
+
+    def register_for_keys(self, actor: Actor):
+        if actor not in self.keyWatchers:
+            self.keyWatchers.append(actor)
