@@ -1,9 +1,10 @@
 from typing import Tuple
 from treeline.engine.actor import Actor
 import numpy as np
-from treeline.engine.utils.matrices import *
+from treeline.engine.utils.matrices import scale, translate, identity
 import math
 import pygame
+
 
 class Camera(Actor):
 

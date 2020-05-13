@@ -19,6 +19,7 @@ class Engine:
         self.actors = []
         self.events = {}
         self.keyWatchers = []
+        self.screen = None
 
     def start(self):
         self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
@@ -36,7 +37,8 @@ class Engine:
         prevFrameTime = thisFrameTime
         while self.running:
             thisFrameTime = datetime.now()
-            deltaTime = (thisFrameTime - prevFrameTime).total_seconds() * 1000.0
+            deltaTime = (thisFrameTime -
+                         prevFrameTime).total_seconds() * 1000.0
             if deltaTime > 33:
                 LOGGER.warn(f"FPS dropped below 30 (deltaTime: {deltaTime})")
             for event in pygame.event.get():
@@ -54,7 +56,8 @@ class Engine:
             self.screen.fill(BACKGROUND_COLOR)
             for actor in self.actors:
                 if actor.shape:
-                    actor.shape.draw(self.camera.transform(actor.position), self.screen)
+                    actor.shape.draw(self.camera.transform(
+                        actor.position), self.screen)
             pygame.display.flip()
             prevFrameTime = thisFrameTime
 

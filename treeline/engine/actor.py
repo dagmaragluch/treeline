@@ -1,6 +1,4 @@
-from typing import (
-    Tuple,
-)
+from typing import Tuple
 from treeline.engine.shape import Shape
 
 
@@ -20,5 +18,11 @@ class Actor:
     def on_key(self, keys, deltaTime):
         """
         Called by engine **every frame** if this actor is registered for key listening.
+        """
+        pass
+
+    def on_pressed(self):
+        """
+        Called by engine if this actor was pressed. (not yet)
         """
         pass
