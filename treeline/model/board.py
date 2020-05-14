@@ -3,10 +3,9 @@ import logging
 from typing import (
     List,
 )
-
+from numpy import genfromtxt
 from treeline.model.terrain import Terrain
 from treeline.model.field import Field
-
 
 LOGGER = logging.getLogger(__name__)
 
@@ -19,14 +18,13 @@ class Board:
         number of columns in array = 2 * width (!)
         number of rows in array = height
     """
-    def __init__(self, width: int, height: int):
-        self.width = width
-        self.height = height
-        self.board = self._create_board(width, height)
 
-    def _create_board(self, width: int, height: int) -> np.ndarray:
-        rows = width
-        columns = 2 * height
+    def __init__(self, file: str):
+        self.board = self._create_board(self.get_data(file))
+
+    def _create_board(self, map_in_array: np.ndarray) -> np.ndarray:
+        rows = map_in_array.shape[0]
+        columns = 2 * map_in_array.shape[1]
         shape = (rows, columns)
         board = np.empty(shape, dtype=object)
 
@@ -35,7 +33,7 @@ class Board:
                 if (x + y) % 2 == 0:
                     board[x][y] = Field(
                         position=(x, y),
-                        terrain=Terrain.grass
+                        terrain=Terrain(map_in_array[x][y // 2])
                     )
 
         return board
@@ -69,7 +67,11 @@ class Board:
                 if (x + y) % 2 == 0:
                     yield self.board[x][y]
 
+    @staticmethod
+    def get_data(file_name: str) -> np.ndarray:
+        my_data = genfromtxt(file_name, delimiter=',')
+        return my_data
 
-#b = Board(6, 3)
-#for f in b.get_all_fields():
+# b = Board(6, 3)
+# for f in b.get_all_fields():
 #    print(f.__dict__)
