@@ -2,6 +2,7 @@ import pygame
 from treeline.engine.shape import Shape
 from typing import List, Tuple
 import numpy as np
+from matplotlib.path import Path
 
 class Polygon(Shape):
 
@@ -9,7 +10,9 @@ class Polygon(Shape):
         self.points = points
         self.color = color
 
-    def draw(self, transform: np.array, surface):
+    def draw(self, transform: np.array, surface) -> Path:
         transformedShape = [transform.dot(point) for point in self.points]
-        
-        pygame.draw.polygon(surface, self.color, np.delete(transformedShape, 2, 1))
+        rawPoints = np.delete(transformedShape, 2, 1)
+
+        pygame.draw.polygon(surface, self.color, rawPoints)
+        return Path(rawPoints)

@@ -23,6 +23,6 @@ class Actor:
 
     def on_pressed(self):
         """
-        Called by engine if this actor was pressed. (not yet)
+        Called by engine if this actor was pressed.
         """
         pass
