@@ -1,3 +1,4 @@
+import logging
 from typing import (
     Tuple,
 )
@@ -7,6 +8,16 @@ from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
 from treeline.model.building import Building
+from treeline.misc.shapes import Hexagon
+
+LOGGER = logging.getLogger(__name__)
+
+
+terrain_shape_mapping = {
+        Terrain.grass: Hexagon(color=(82, 235, 52)),
+        Terrain.forest: Hexagon(color=(21, 117, 2)),
+        Terrain.mountain: Hexagon(color=(97, 77, 50))
+    }
 
 
 class Field(Actor):
@@ -17,7 +28,8 @@ class Field(Actor):
             building: Building = None,
             game=None
     ):
-        Actor.__init__(self, position)
+        shape = terrain_shape_mapping[terrain]
+        Actor.__init__(self, position, shape)
         self.terrain = terrain
         self.building = building
         self.game = game
@@ -36,4 +48,5 @@ class Field(Actor):
         return produced_resources
 
     def on_pressed(self):
+        LOGGER.debug("Field with position (%d, %d) clicked", self.position[0], self.position[1])
         self.game.field_clicked(self)
