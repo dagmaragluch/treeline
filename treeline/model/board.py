@@ -62,8 +62,8 @@ class Board:
         return list_of_neighbours
 
     def get_all_fields(self) -> List[Field]:
-        for x in range(0, self.width):
-            for y in range(0, 2 * self.height):
+        for x in range(0, self.board.shape[0]):
+            for y in range(0, self.board.shape[1]):
                 if (x + y) % 2 == 0:
                     yield self.board[x][y]
 
@@ -72,6 +72,7 @@ class Board:
         my_data = genfromtxt(file_name, delimiter=',')
         return my_data
 
-# b = Board(6, 3)
+
+# b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map1.csv")
 # for f in b.get_all_fields():
-#    print(f.__dict__)
+#     print(f.__dict__)
