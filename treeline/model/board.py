@@ -4,10 +4,9 @@ from typing import (
     List,
 )
 
-from treeline.model.field import (
-    Field,
-    Terrain,
-)
+from treeline.model.terrain import Terrain
+from treeline.model.field import Field
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -64,7 +63,13 @@ class Board:
         LOGGER.info("Found %d neighbours for (%d, %d) field)", len(list_of_neighbours), x, y)
         return list_of_neighbours
 
+    def get_all_fields(self) -> List[Field]:
+        for x in range(0, self.width):
+            for y in range(0, 2 * self.height):
+                if (x + y) % 2 == 0:
+                    yield self.board[x][y]
 
-# b = Board(6, 3)
-# n1 = b.get_neighbours(b.board[4][2])
-# print(n1)
+
+#b = Board(6, 3)
+#for f in b.get_all_fields():
+#    print(f.__dict__)

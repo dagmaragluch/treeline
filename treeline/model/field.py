@@ -1,18 +1,12 @@
-from enum import Enum
 from typing import (
     Tuple,
 )
 
+from treeline.model.terrain import Terrain
 from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
 from treeline.model.building import Building
-
-
-class Terrain(Enum):
-    grass = 1
-    forest = 2
-    mountain = 3
 
 
 class Field(Actor):
@@ -20,11 +14,13 @@ class Field(Actor):
             self,
             position: Tuple[int, int],
             terrain: Terrain,
-            building: Building
+            building: Building = None,
+            game=None
     ):
         Actor.__init__(self, position)
         self.terrain = terrain
         self.building = building
+        self.game = game
 
     def get_resources(self) -> Resources:
         produced_resources = Resources()
@@ -38,3 +34,6 @@ class Field(Actor):
 
         produced_resources += self.building.get_resources()
         return produced_resources
+
+    def on_pressed(self):
+        self.game.field_clicked(self)
