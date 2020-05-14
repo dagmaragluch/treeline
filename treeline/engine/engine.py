@@ -7,6 +7,8 @@ from datetime import datetime
 from typing import List
 import matplotlib.path
 
+from treeline.engine.shapes.polygon import Polygon
+
 LOGGER = logging.getLogger(__name__)
 BACKGROUND_COLOR = (66, 135, 245)
 
@@ -41,9 +43,10 @@ class Engine:
         mousePosition = None
 
         while self.running:
+            viewport = self.camera.get_viewport()
             thisFrameTime = datetime.now()
             deltaTime = (thisFrameTime -
-                         prevFrameTime).total_seconds() * 1000.0
+                         prevFrameTime).total_seconds() * 1000
             if deltaTime > 33:
                 LOGGER.warn(f"FPS dropped below 30 (deltaTime: {deltaTime})")
 
@@ -65,7 +68,7 @@ class Engine:
 
             self.screen.fill(BACKGROUND_COLOR)
             for actor in self.actors:
-                if actor.shape:
+                if actor.shape and (viewport.contains_point(actor.position, radius=1)):
                     bounds = actor.shape.draw(
                         self.camera.transform(actor.position), self.screen)
                     if mousePosition and bounds.contains_point(mousePosition):

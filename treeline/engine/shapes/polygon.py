@@ -16,3 +16,11 @@ class Polygon(Shape):
 
         pygame.draw.polygon(surface, self.color, rawPoints)
         return Path(rawPoints)
+
+    def highlight(self, transform: np.array, surface):
+        transformedShape = [transform.dot(point) for point in self.points]
+        rawPoints = np.delete(transformedShape, 2, 1)
+
+        highlightColor = np.array(self.color) * 1.1
+
+        pygame.draw.polygon(surface, highlightColor, rawPoints, 5)
