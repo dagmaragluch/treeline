@@ -1,5 +1,6 @@
 import numpy as np
 import logging
+import random
 from typing import (
     List,
 )
@@ -21,6 +22,8 @@ class Board:
 
     def __init__(self, file: str):
         self.board = self._create_board(self.get_data(file))
+        self.width = self.board.shape[1]
+        self.height = self.board.shape[0]
 
     def _create_board(self, map_in_array: np.ndarray) -> np.ndarray:
         rows = map_in_array.shape[0]
@@ -62,8 +65,8 @@ class Board:
         return list_of_neighbours
 
     def get_all_fields(self) -> List[Field]:
-        for x in range(0, self.board.shape[0]):
-            for y in range(0, self.board.shape[1]):
+        for x in range(0, self.height):
+            for y in range(0, self.width):
                 if (x + y) % 2 == 0:
                     yield self.board[x][y]
 
@@ -72,7 +75,21 @@ class Board:
         my_data = genfromtxt(file_name, delimiter=',')
         return my_data
 
+    def get_field(self, x: int, y: int) -> Field:
+        if 0 < x < self.height and 0 < y < self.width:
+            return self.board[x][y]
+        else:
+            raise IndexError
+
+    def get_random_field(self) -> Field:
+        x = 0
+        y = 1
+        while (x + y) % 2 != 0:
+            x = random.randrange(0, self.height)
+            y = random.randrange(0, self.width)
+        return self.get_field(x, y)
 
 # b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map1.csv")
 # for f in b.get_all_fields():
 #     print(f.__dict__)
+# b.get_random_field()

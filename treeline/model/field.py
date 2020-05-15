@@ -12,12 +12,11 @@ from treeline.misc.shapes import Hexagon
 
 LOGGER = logging.getLogger(__name__)
 
-
 terrain_shape_mapping = {
-        Terrain.grass: Hexagon(color=(82, 235, 52)),
-        Terrain.forest: Hexagon(color=(21, 117, 2)),
-        Terrain.mountain: Hexagon(color=(97, 77, 50))
-    }
+    Terrain.grass: Hexagon(color=(82, 235, 52)),
+    Terrain.forest: Hexagon(color=(21, 117, 2)),
+    Terrain.mountain: Hexagon(color=(97, 77, 50))
+}
 
 
 class Field(Actor):
@@ -26,12 +25,14 @@ class Field(Actor):
             position: Tuple[int, int],
             terrain: Terrain,
             building: Building = None,
+            owner: int = 0,
             game=None
     ):
         shape = terrain_shape_mapping[terrain]
         Actor.__init__(self, position, shape)
         self.terrain = terrain
         self.building = building
+        self.owner = owner
         self.game = game
 
     def get_resources(self) -> Resources:
