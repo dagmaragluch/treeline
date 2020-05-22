@@ -6,8 +6,7 @@ import numpy as np
 from datetime import datetime
 from typing import List
 import matplotlib.path
-
-from treeline.engine.shapes.polygon import Polygon
+from statistics import mean
 
 LOGGER = logging.getLogger(__name__)
 BACKGROUND_COLOR = (66, 135, 245)
@@ -42,13 +41,20 @@ class Engine:
         prevFrameTime = thisFrameTime
         mousePosition = None
 
+        totalFrames = 0
+        lagFrames = 0
+        frameTimes = [] # TODO: remove for release
+
         while self.running:
+            totalFrames += 1
+            self.camera.frame()
             viewport = self.camera.get_viewport()
             thisFrameTime = datetime.now()
             deltaTime = (thisFrameTime -
                          prevFrameTime).total_seconds() * 1000
+            frameTimes.append(deltaTime)
             if deltaTime > 33:
-                LOGGER.warn(f"FPS dropped below 30 (deltaTime: {deltaTime})")
+                lagFrames += 1
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -77,6 +83,9 @@ class Engine:
             pygame.display.flip()
             prevFrameTime = thisFrameTime
             mousePosition = None
+
+        LOGGER.info(f"Lagged frames: {lagFrames} / {totalFrames}")
+        LOGGER.info(f"Average FPS: {1000 / mean(frameTimes)}")
 
     def _quit(self):
         self.running = False

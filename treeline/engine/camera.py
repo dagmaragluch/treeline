@@ -6,7 +6,8 @@ import math
 import pygame
 from matplotlib.path import Path
 
-WORLD_SCALE = np.array((1 / 4 * 3, 1 / 4 * math.sqrt(3), 1))
+WORLD_SCALE_VECTOR = np.array((1 / 4 * 3, 1 / 4 * math.sqrt(3), 1))
+WORLD_SCALE = scale(WORLD_SCALE_VECTOR)
 
 class Camera(Actor):
 
@@ -21,17 +22,17 @@ class Camera(Actor):
     def setup(self, screenSize: np.array):
         self.screenSize = screenSize
         self.positionOnScreen = (screenSize[0] / 2, screenSize[1] / 2)
+        tileSize = self._get_tile_size()
+        self.tileScale = scale(tileSize)
+
+    def frame(self):
+        self.projection = translate(self.positionOnScreen) @ self.tileScale
+        self.view = translate(WORLD_SCALE @ np.append(-np.array(self.position), 1))
 
     def transform(self, position: np.array) -> np.array:
-        tileSize = self._get_tile_size()
-        tileScale = scale(tileSize)
-        worldScale = scale(WORLD_SCALE)
-        positionVector = worldScale @ np.append(position, 1)
-
-        projection = translate(self.positionOnScreen) @ tileScale
-        view = translate(worldScale @ np.append(-np.array(self.position), 1))
+        positionVector = WORLD_SCALE @ np.append(position, 1)
         model = translate(positionVector)
-        mvp = projection @ view @ model
+        mvp = self.projection @ self.view @ model
         return mvp
 
     def on_key(self, keys, deltaTime):
@@ -52,7 +53,7 @@ class Camera(Actor):
     def get_viewport(self):
         fx = self.fov / 2
         fy = fx * self.screenSize[1] / self.screenSize[0]
-        fx, fy, w = scale(1/WORLD_SCALE) @ (fx, fy, 1)
+        fx, fy, w = scale(1/WORLD_SCALE_VECTOR) @ (fx, fy, 1)
         rect = [np.array(c) for c in [(-fx, -fy), (fx, -fy), (fx, fy), (-fx, fy)]]
         viewport = [(c + self.position) for c in rect]
         return Path(viewport)
