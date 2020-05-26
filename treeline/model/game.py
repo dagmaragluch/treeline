@@ -55,3 +55,7 @@ class Game:
         if field.owner != self.player.player_number:  # pole nie należy do gracza
             if self.is_take_field_possible(field):  # pole spełnia warunki przejęcia
                 self.update_field_owner(field)
+
+    def end_turn(self):
+        for player_field in self.player.fields:
+            self.player.resources += player_field.get_resources()
