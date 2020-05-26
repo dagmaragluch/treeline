@@ -4,6 +4,7 @@ from typing import List, Tuple
 import numpy as np
 from matplotlib.path import Path
 
+
 class Polygon(Shape):
 
     def __init__(self, points: List[Tuple[int, int]], color: Tuple[int, int, int] = (255, 255, 255)):
@@ -11,16 +12,24 @@ class Polygon(Shape):
         self.color = color
 
     def draw(self, transform: np.array, surface) -> Path:
-        transformedShape = [transform.dot(point) for point in self.points]
-        rawPoints = np.delete(transformedShape, 2, 1)
+        transformed_shape = [transform.dot(point) for point in self.points]
+        raw_points = np.delete(transformed_shape, 2, 1)
 
-        pygame.draw.polygon(surface, self.color, rawPoints)
-        return Path(rawPoints)
+        pygame.draw.polygon(surface, self.color, raw_points)
+        return Path(raw_points)
 
     def highlight(self, transform: np.array, surface):
-        transformedShape = [transform.dot(point) for point in self.points]
-        rawPoints = np.delete(transformedShape, 2, 1)
+        transformed_shape = [transform.dot(point) for point in self.points]
+        raw_points = np.delete(transformed_shape, 2, 1)
 
-        highlightColor = np.array(self.color) * 1.1
+        highlight_color = np.array(self.color) + 25
 
-        pygame.draw.polygon(surface, highlightColor, rawPoints, 5)
+        pygame.draw.polygon(surface, highlight_color, raw_points, 5)
+
+    def highlight_off(self, transform: np.array, surface):
+        transformed_shape = [transform.dot(point) for point in self.points]
+        raw_points = np.delete(transformed_shape, 2, 1)
+
+        highlight_color_off = np.array(self.color) - 25
+
+        pygame.draw.polygon(surface, highlight_color_off, raw_points, 5)

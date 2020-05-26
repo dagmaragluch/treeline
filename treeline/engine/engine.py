@@ -15,6 +15,7 @@ BACKGROUND_COLOR = (66, 135, 245)
 class Engine:
 
     def __init__(self):
+        self.screen = None
         pygame.init()
         pygame.display.set_caption("Treeline")
         self.running = False
@@ -97,11 +98,11 @@ class Engine:
     def add_actor(self, actor: Actor):
         self.actors.append(actor)
 
-    def register_for_event(self, actor: Actor, eventType: int):
-        if eventType in self.events:
-            self.events[eventType].append(actor)
+    def register_for_event(self, actor: Actor, event_type: int):
+        if event_type in self.events:
+            self.events[event_type].append(actor)
         else:
-            self.events[eventType] = [actor]
+            self.events[event_type] = [actor]
 
     def register_for_keys(self, actor: Actor):
         if actor not in self.keyWatchers:
