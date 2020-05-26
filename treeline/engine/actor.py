@@ -15,7 +15,7 @@ class Actor:
         """
         pass
 
-    def on_key(self, keys, deltaTime):
+    def on_key(self, keys, delta_time):
         """
         Called by engine **every frame** if this actor is registered for key listening.
         """

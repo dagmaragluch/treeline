@@ -7,7 +7,7 @@ from matplotlib.path import Path
 
 class Polygon(Shape):
 
-    def __init__(self, points: List[Tuple[int, int]], color: Tuple[int, int, int] = (255, 255, 255)):
+    def __init__(self, points: List[Tuple[float, float, float]], color: Tuple[int, int, int] = (255, 255, 255)):
         self.points = points
         self.color = color
 

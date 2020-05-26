@@ -9,34 +9,37 @@ from matplotlib.path import Path
 WORLD_SCALE_VECTOR = np.array((1 / 4 * 3, 1 / 4 * math.sqrt(3), 1))
 WORLD_SCALE = scale(WORLD_SCALE_VECTOR)
 
+
 class Camera(Actor):
 
     def __init__(self, position: Tuple[float, float], fov: int = 16, speed: float = 5.0):
         Actor.__init__(self, position)
         self.fov = fov
-        self.speed = speed
-
-        self.screenSize = None
+        self.projection = None
         self.positionOnScreen = None
+        self.screenSize = None
+        self.speed = speed
+        self.tile_scale = None
+        self.view = None
 
-    def setup(self, screenSize: np.array):
-        self.screenSize = screenSize
-        self.positionOnScreen = (screenSize[0] / 2, screenSize[1] / 2)
-        tileSize = self._get_tile_size()
-        self.tileScale = scale(tileSize)
+    def setup(self, screen_size: np.array):
+        self.screenSize = screen_size
+        self.positionOnScreen = (screen_size[0] / 2, screen_size[1] / 2)
+        tile_size = self._get_tile_size()
+        self.tile_scale = scale(tile_size)
 
     def frame(self):
-        self.projection = translate(self.positionOnScreen) @ self.tileScale
+        self.projection = translate(self.positionOnScreen) @ self.tile_scale
         self.view = translate(WORLD_SCALE @ np.append(-np.array(self.position), 1))
 
     def transform(self, position: np.array) -> np.array:
-        positionVector = WORLD_SCALE @ np.append(position, 1)
-        model = translate(positionVector)
+        position_vector = WORLD_SCALE @ np.append(position, 1)
+        model = translate(position_vector)
         mvp = self.projection @ self.view @ model
         return mvp
 
-    def on_key(self, keys, deltaTime):
-        m = self.speed * deltaTime / 1000
+    def on_key(self, keys, delta_time):
+        m = self.speed * delta_time / 1000
         if keys[pygame.K_w]:
             self.position = (self.position[0], self.position[1] - m)
         if keys[pygame.K_a]:
@@ -48,12 +51,12 @@ class Camera(Actor):
 
     def _get_tile_size(self):
         return np.array([self.screenSize[0] / self.fov,
-                self.screenSize[0] / self.fov])
+                         self.screenSize[0] / self.fov])
 
     def get_viewport(self):
         fx = self.fov / 2
         fy = fx * self.screenSize[1] / self.screenSize[0]
-        fx, fy, w = scale(1/WORLD_SCALE_VECTOR) @ (fx, fy, 1)
+        fx, fy, w = scale(1 / WORLD_SCALE_VECTOR) @ (fx, fy, 1)
         rect = [np.array(c) for c in [(-fx, -fy), (fx, -fy), (fx, fy), (-fx, fy)]]
         viewport = [(c + self.position) for c in rect]
         return Path(viewport)

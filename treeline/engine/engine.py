@@ -32,30 +32,30 @@ class Engine:
             LOGGER.error("No camera set before engine started: aborting")
             return
 
-        screenSize = pygame.display.get_surface().get_size()
-        LOGGER.debug(f"Screen size: {screenSize}")
-        self.camera.setup(screenSize)
+        screen_size = pygame.display.get_surface().get_size()
+        LOGGER.debug(f"Screen size: {screen_size}")
+        self.camera.setup(screen_size)
 
         self.running = True
 
-        thisFrameTime = datetime.now()
-        prevFrameTime = thisFrameTime
-        mousePosition = None
+        this_frame_time = datetime.now()
+        prev_frame_time = this_frame_time
+        mouse_position = None
 
-        totalFrames = 0
-        lagFrames = 0
-        frameTimes = [] # TODO: remove for release
+        total_frames = 0
+        lag_frames = 0
+        frame_times = []  # TODO: remove for release
 
         while self.running:
-            totalFrames += 1
+            total_frames += 1
             self.camera.frame()
             viewport = self.camera.get_viewport()
-            thisFrameTime = datetime.now()
-            deltaTime = (thisFrameTime -
-                         prevFrameTime).total_seconds() * 1000
-            frameTimes.append(deltaTime)
-            if deltaTime > 33:
-                lagFrames += 1
+            this_frame_time = datetime.now()
+            delta_time = (this_frame_time -
+                          prev_frame_time).total_seconds() * 1000
+            frame_times.append(delta_time)
+            if delta_time > 33:
+                lag_frames += 1
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -64,29 +64,29 @@ class Engine:
                     if event.key == pygame.K_ESCAPE:
                         self._quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mousePosition = pygame.mouse.get_pos()
+                    mouse_position = pygame.mouse.get_pos()
                 if event.type in self.events:
                     for actor in self.events[event.type]:
                         actor.on_event(event)
 
             keys = pygame.key.get_pressed()
             for actor in self.keyWatchers:
-                actor.on_key(keys, deltaTime)
+                actor.on_key(keys, delta_time)
 
             self.screen.fill(BACKGROUND_COLOR)
             for actor in self.actors:
                 if actor.shape and (viewport.contains_point(actor.position, radius=1)):
                     bounds = actor.shape.draw(
                         self.camera.transform(actor.position), self.screen)
-                    if mousePosition and bounds.contains_point(mousePosition):
+                    if mouse_position and bounds.contains_point(mouse_position):
                         actor.on_pressed()
 
             pygame.display.flip()
-            prevFrameTime = thisFrameTime
-            mousePosition = None
+            prev_frame_time = this_frame_time
+            mouse_position = None
 
-        LOGGER.info(f"Lagged frames: {lagFrames} / {totalFrames}")
-        LOGGER.info(f"Average FPS: {1000 / mean(frameTimes)}")
+        LOGGER.info(f"Lagged frames: {lag_frames} / {total_frames}")
+        LOGGER.info(f"Average FPS: {1000 / mean(frame_times)}")
 
     def _quit(self):
         self.running = False
