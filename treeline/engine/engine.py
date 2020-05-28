@@ -108,5 +108,5 @@ class Engine:
         if actor not in self.keyWatchers:
             self.keyWatchers.append(actor)
 
-    def getActorsUnderCursor(self, position) -> List[Actor]:
+    def get_actors_under_cursor(self, position) -> List[Actor]:
         return []
