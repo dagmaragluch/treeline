@@ -57,5 +57,6 @@ class Game:
                 self.update_field_owner(field)
 
     def end_turn(self):
+        LOGGER.info("End turn")
         for player_field in self.player.fields:
             self.player.resources += player_field.get_resources()

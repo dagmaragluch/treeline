@@ -2,6 +2,7 @@ import pygame
 import logging
 from treeline.engine.actor import Actor
 from treeline.engine.camera import Camera
+from treeline.engine.widget import Widget
 import numpy as np
 from datetime import datetime
 from typing import List
@@ -21,6 +22,7 @@ class Engine:
         self.running = False
         self.camera = None
         self.actors = []
+        self.widgets = []
         self.events = {}
         self.keyWatchers = []
         self.screen = None
@@ -74,12 +76,18 @@ class Engine:
                 actor.on_key(keys, delta_time)
 
             self.screen.fill(BACKGROUND_COLOR)
+
             for actor in self.actors:
                 if actor.shape and (viewport.contains_point(actor.position, radius=1)):
                     bounds = actor.shape.draw(
                         self.camera.transform(actor.position), self.screen)
                     if mouse_position and bounds.contains_point(mouse_position):
                         actor.on_pressed()
+
+            for widget in self.widgets:
+                bounds = widget.draw(self.screen)
+                if mouse_position and bounds.collidepoint(mouse_position):
+                    widget.on_click()
 
             pygame.display.flip()
             prev_frame_time = this_frame_time
@@ -110,3 +118,6 @@ class Engine:
 
     def get_actors_under_cursor(self, position) -> List[Actor]:
         return []
+
+    def add_widget(self, widget: Widget):
+        self.widgets.append(widget)

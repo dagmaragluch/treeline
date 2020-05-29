@@ -4,7 +4,7 @@ from treeline.model.board import Board
 from treeline.model.player import Player
 from treeline.model.resource import Resources
 from treeline.model.game import Game
-import pygame
+from treeline.interface.interface import Interface
 
 
 if __name__ == '__main__':
@@ -12,11 +12,14 @@ if __name__ == '__main__':
     camera = Camera((0, 0), fov=16)
     engine.set_camera(camera)
     engine.register_for_keys(camera)
-    engine.register_for_event(camera, pygame.KEYDOWN) # for debugging
 
     board = Board("./resources/maps/map1.csv")
     player = Player(Resources())
     game = Game(board, player)
+    interface = Interface(game)
+
+    for widget in interface.widgets:
+        engine.add_widget(widget)
     for actor in game.get_all_actors():
         engine.add_actor(actor)
 
