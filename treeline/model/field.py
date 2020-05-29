@@ -45,7 +45,8 @@ class Field(Actor):
         elif self.terrain == Terrain.mountain:
             produced_resources.add_resource(ResourceType.iron, 1)
 
-        produced_resources += self.building.get_resources()
+        if self.building:
+            produced_resources += self.building.get_resources()
         return produced_resources
 
     def on_pressed(self):
