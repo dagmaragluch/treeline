@@ -12,10 +12,13 @@ from treeline.misc.shapes import Hexagon
 
 LOGGER = logging.getLogger(__name__)
 
-terrain_shape_mapping = {
-    Terrain.grass: Hexagon(color=(82, 235, 52)),
-    Terrain.forest: Hexagon(color=(21, 117, 2)),
-    Terrain.mountain: Hexagon(color=(97, 77, 50))
+hexagons = {
+    "grass": Hexagon(color=(82, 235, 52)),
+    "grass_highlight": Hexagon(color=(102, 255, 72)),
+    "forest": Hexagon(color=(21, 117, 2)),
+    "forest_highlight": Hexagon(color=(41, 137, 22)),
+    "mountain": Hexagon(color=(97, 77, 50)),
+    "mountain_highlight": Hexagon(color=(117, 97, 70))
 }
 
 
@@ -28,7 +31,7 @@ class Field(Actor):
             owner: int = 0,
             game=None
     ):
-        shape = terrain_shape_mapping[terrain]
+        shape = hexagons[terrain.name]
         Actor.__init__(self, position, shape)
         self.terrain = terrain
         self.building = building
@@ -52,3 +55,9 @@ class Field(Actor):
     def on_pressed(self):
         LOGGER.debug("Field with position (%d, %d) clicked", self.position[0], self.position[1])
         self.game.field_clicked(self)
+
+    def highlight(self):
+        self.shape = hexagons[f"{self.terrain.name}_highlight"]
+
+    def highlight_off(self):
+        self.shape = hexagons[self.terrain.name]

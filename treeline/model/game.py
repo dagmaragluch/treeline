@@ -26,6 +26,9 @@ class Game:
     def field_clicked(self, field: Field):
         if field is not self._selected_field:
             LOGGER.debug("Selected field (%d, %d)", field.position[0], field.position[1])
+            field.highlight()
+            if self._selected_field:
+                self._selected_field.highlight_off()
             self._selected_field = field
         else:
             pass  # manage the click in some other way
