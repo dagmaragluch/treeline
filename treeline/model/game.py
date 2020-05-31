@@ -2,7 +2,8 @@ import logging
 from typing import (
     Optional,
     Iterator,
-    Callable
+    Callable,
+    List
 )
 
 from treeline.engine.actor import Actor
@@ -15,15 +16,17 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Game:
-    def __init__(self, board: Board, player: Player):
+    def __init__(self, board: Board, players: List[Player]):
         self.board = board
-        self.player = player
+        self.players = players
+        self._active_player = players[0]
+        self._active_player_index = 0
 
         self._selected_field: Optional[Field] = None
 
         for field in self.board.get_all_fields():
             field.game = self
-        self.set_start_field()
+        self._set_start_fields()
 
         self.decorators = Game.Decorators(self.board.get_field)
 
@@ -40,33 +43,45 @@ class Game:
     def get_all_actors(self) -> Iterator[Actor]:
         yield from self.board.get_all_fields()
 
-    def update_field_owner(self, field: Field):  # przy większej liczbie graczy dodać player jako parametr
-        field.owner = self.player.player_number  # update ownera pola
-        self.player.fields.append(field)  # dodanie pola do listy pól gracza
+    @staticmethod
+    def _update_field_owner(field: Field, player: Player):
+        field.owner = player.player_number  # update ownera pola
+        player.fields.append(field)  # dodanie pola do listy pól gracza
 
-    def set_start_field(self):
-        start_field = self.board.get_random_field()
-        self.update_field_owner(start_field)
+    def _set_start_fields(self):
+        taken_fields = []
+        for player in self.players:
+            start_field = self.board.get_random_field()
+            while start_field in taken_fields:
+                start_field = self.board.get_random_field()
+            taken_fields.append(start_field)
+            self._update_field_owner(start_field, player)
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
         potem można dopisać więcej warunków, np. spr niezbędnej ilości zasobów'''
 
-    def is_take_field_possible(self, field: Field) -> bool:
+    def _is_take_field_possible(self, field: Field, player: Player) -> bool:
+        if field.owner == player.player_number:  # pole należy do gracza
+            return False
+
         neighbours = self.board.get_neighbours(field)
         for n in neighbours:
-            if n.owner == self.player.player_number:
+            if n.owner == player.player_number:
                 return True
         return False
 
     def take_over_field(self, field: Field):
-        if field.owner != self.player.player_number:  # pole nie należy do gracza
-            if self.is_take_field_possible(field):  # pole spełnia warunki przejęcia
-                self.update_field_owner(field)
+        if self._is_take_field_possible(field, self._active_player):  # pole spełnia warunki przejęcia
+            self._update_field_owner(field, self._active_player)
 
     def end_turn(self):
-        LOGGER.info("End turn")
-        for player_field in self.player.fields:
-            self.player.resources += player_field.get_resources()
+        LOGGER.info("End turn for player %d", self._active_player.player_number)
+        for player_field in self._active_player.fields:
+            self._active_player.resources += player_field.get_resources()
+
+        self._active_player_index = (self._active_player_index + 1) % len(self.players)
+        self._active_player = self.players[self._active_player_index]
+        LOGGER.info("Next turn for player %d", self._active_player.player_number)
 
     class Decorators:
         def __init__(self, get_field_function: Callable):

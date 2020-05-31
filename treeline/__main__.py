@@ -14,8 +14,8 @@ if __name__ == '__main__':
     engine.register_for_keys(camera)
 
     board = Board("./resources/maps/map1.csv")
-    player = Player(Resources())
-    game = Game(board, player)
+    players = [Player(Resources()), Player(Resources())]
+    game = Game(board, players)
     interface = Interface(game)
 
     for widget in interface.widgets:

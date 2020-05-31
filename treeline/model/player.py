@@ -10,7 +10,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Player:
+    current_number = 1
+
     def __init__(self, resources: Resources):
-        self.player_number = 1  # jeśli będzie więcej graczy, to dopisać metodę ustawiającą numer
+        self.player_number = Player.current_number
+        Player.current_number += 1
         self.resources = resources
         self.fields: List[Field] = []
