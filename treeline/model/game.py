@@ -10,6 +10,8 @@ from treeline.engine.actor import Actor
 from treeline.model.player import Player
 from treeline.model.board import Board
 from treeline.model.field import Field
+from treeline.model.building import building_types
+from treeline.model.resource import NegativeResourceError
 from treeline.Network.receiver import Receiver
 
 LOGGER = logging.getLogger(__name__)
@@ -29,6 +31,24 @@ class Game:
         self._set_start_fields()
 
         self.decorators = Game.Decorators(self.board.get_field)
+        self.build("sawmill", board.get_field(0, 0))
+
+    def build(self, building_type: str, field: Field) -> bool:
+        if field not in self._active_player.fields:
+            LOGGER.debug("Can not build. Field (%d, %d) does not belong to active player",
+                         field.position[0], field.position[1])
+            return False
+
+        building = building_types[building_type]()
+        try:
+            self._active_player.resources -= building.cost
+        except NegativeResourceError:
+            LOGGER.debug("Not enough resources to build %s", building_type)
+            return False
+
+        field.building = building
+        LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
+        return True
 
     def _field_clicked(self, field: Field):
         if field is not self._selected_field:

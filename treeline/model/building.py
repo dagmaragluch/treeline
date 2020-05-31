@@ -81,3 +81,10 @@ class IronMine(Building):
         iron_produced = self.workers * 1
         resources.add_resource(ResourceType.iron, iron_produced)
         return resources
+
+
+building_types = {
+    "farm": Farm,
+    "sawmill": Sawmill,
+    "ironmine": IronMine,
+}

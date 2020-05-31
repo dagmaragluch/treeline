@@ -5,6 +5,7 @@ from typing import (
 
 from treeline.model.field import Field
 from treeline.model.resource import Resources
+from treeline.model.resource_config import STARTING_RESOURCES
 
 LOGGER = logging.getLogger(__name__)
 
@@ -12,8 +13,8 @@ LOGGER = logging.getLogger(__name__)
 class Player:
     current_number = 1
 
-    def __init__(self, resources: Resources):
+    def __init__(self):
         self.player_number = Player.current_number
         Player.current_number += 1
-        self.resources = resources
+        self.resources = Resources.from_dictionary(STARTING_RESOURCES)
         self.fields: List[Field] = []
