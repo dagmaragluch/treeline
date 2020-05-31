@@ -28,15 +28,14 @@ class Field(Actor):
             position: Tuple[int, int],
             terrain: Terrain,
             building: Building = None,
-            owner: int = 0,
-            game=None
+            owner: int = 0
     ):
         shape = hexagons[terrain.name]
         Actor.__init__(self, position, shape)
         self.terrain = terrain
         self.building = building
         self.owner = owner
-        self.game = game
+        self.click_callback = None
 
     def get_resources(self) -> Resources:
         produced_resources = Resources()
@@ -54,7 +53,7 @@ class Field(Actor):
 
     def on_pressed(self):
         LOGGER.debug("Field with position (%d, %d) clicked", self.position[0], self.position[1])
-        self.game.field_clicked(self)
+        self.click_callback(self)
 
     def highlight(self):
         self.shape = hexagons[f"{self.terrain.name}_highlight"]

@@ -25,12 +25,12 @@ class Game:
         self._selected_field: Optional[Field] = None
 
         for field in self.board.get_all_fields():
-            field.game = self
+            field.click_callback = self._field_clicked
         self._set_start_fields()
 
         self.decorators = Game.Decorators(self.board.get_field)
 
-    def field_clicked(self, field: Field):
+    def _field_clicked(self, field: Field):
         if field is not self._selected_field:
             LOGGER.debug("Selected field (%d, %d)", field.position[0], field.position[1])
             field.highlight()
