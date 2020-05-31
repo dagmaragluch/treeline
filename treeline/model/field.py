@@ -15,6 +15,7 @@ LOGGER = logging.getLogger(__name__)
 hexagons = {
     "grass": Hexagon(color=(82, 235, 52)),
     "grass_highlight": Hexagon(color=(102, 255, 72)),
+    "grass_red": Hexagon(color=(255, 235, 52)),  # not red at all
     "forest": Hexagon(color=(21, 117, 2)),
     "forest_highlight": Hexagon(color=(41, 137, 22)),
     "mountain": Hexagon(color=(97, 77, 50)),
@@ -34,7 +35,7 @@ class Field(Actor):
         Actor.__init__(self, position, shape)
         self.terrain = terrain
         self.building = building
-        self.owner = owner
+        self._owner = owner
         self.click_callback = None
 
     def get_resources(self) -> Resources:
@@ -60,3 +61,12 @@ class Field(Actor):
 
     def highlight_off(self):
         self.shape = hexagons[self.terrain.name]
+
+    @property
+    def owner(self):
+        return self._owner
+
+    @owner.setter
+    def owner(self, owner):
+        self.shape = hexagons["grass_red"]  # TODO update textures here
+        self._owner = owner
