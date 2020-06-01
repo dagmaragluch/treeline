@@ -130,6 +130,10 @@ class Game:
         self._active_player = self.players[self._active_player_index]
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
 
+    @property
+    def selected_field(self):
+        return self._selected_field
+
     class Decorators:
         def __init__(self, get_field_function: Callable):
             self._get_field_function = get_field_function
