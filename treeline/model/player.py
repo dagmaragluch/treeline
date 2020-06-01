@@ -18,3 +18,5 @@ class Player:
         Player.current_number += 1
         self.resources = Resources.from_dictionary(STARTING_RESOURCES)
         self.fields: List[Field] = []
+        self.available_workers = 10
+        self.total_workers = 10

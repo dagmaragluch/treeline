@@ -29,12 +29,14 @@ class Building:
         total_workers = self.workers + amount
         if total_workers > self.max_workers:
             return False
+        self.workers = total_workers
         return True
 
     def subtract_workers(self, amount: int) -> bool:
         total_workers = self.workers - amount
         if total_workers < 0:
             return False
+        self.workers = total_workers
         return True
 
 

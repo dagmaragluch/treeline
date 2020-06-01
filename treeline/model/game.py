@@ -35,7 +35,7 @@ class Game:
 
     def build(self, building_type: str, field: Field) -> bool:
         if field not in self._active_player.fields:
-            LOGGER.debug("Can not build. Field (%d, %d) does not belong to active player",
+            LOGGER.debug("Cannot build. Field (%d, %d) does not belong to active player",
                          field.position[0], field.position[1])
             return False
 
@@ -48,6 +48,33 @@ class Game:
 
         field.building = building
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
+        return True
+
+    def add_worker(self, field: Field) -> bool:
+        if not field.building:
+            LOGGER.debug("Cannot add workers to field with no building")
+            return False
+        if self._active_player.available_workers < 0:
+            LOGGER.debug("No available workers")
+            return False
+        successfull = field.building.add_workers(1)
+        if not successfull:
+            LOGGER.debug("Cannot add worker to field (%d, %d)", field.position[0], field.position[1])
+            return False
+        self._active_player.available_workers -= 1
+        LOGGER.debug("Added worker to field (%d, %d)", field.position[0], field.position[1])
+        return True
+
+    def remove_worker(self, field: Field) -> bool:
+        if not field.building:
+            LOGGER.debug("Cannot remove workers to field with no building")
+            return False
+        successfull = field.building.subtract_workers(1)
+        if not successfull:
+            LOGGER.debug("Cannot remove worker from field (%d, %d)", field.position[0], field.position[1])
+            return False
+        self._active_player.available_workers += 1
+        LOGGER.debug("Removed worker from field (%d, %d)", field.position[0], field.position[1])
         return True
 
     def _field_clicked(self, field: Field):
