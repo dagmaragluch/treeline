@@ -38,6 +38,11 @@ class Engine:
         LOGGER.debug(f"Screen size: {screen_size}")
         self.camera.setup(screen_size)
 
+        scale = tuple(map(int, self.camera.get_scale()))
+        for actor in self.actors:
+            if actor.shape:
+                actor.shape.scale(scale)
+
         self.running = True
 
         this_frame_time = datetime.now()
