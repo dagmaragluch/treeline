@@ -54,7 +54,7 @@ class Game:
         if not field.building:
             LOGGER.debug("Cannot add workers to field with no building")
             return False
-        if self._active_player.available_workers < 0:
+        if self._active_player.available_workers <= 0:
             LOGGER.debug("No available workers")
             return False
         successfull = field.building.add_workers(1)
@@ -126,6 +126,11 @@ class Game:
         LOGGER.info("End turn for player %d", self._active_player.player_number)
         for player_field in self._active_player.fields:
             self._active_player.resources += player_field.get_resources()
+
+            if player_field.building.building_type == 3:    # building is house
+                if player_field.building.can_make_child():  # try to make new worker
+                    self._active_player.total_workers += 1
+                    self._active_player.available_workers += 1
 
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]

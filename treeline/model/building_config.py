@@ -30,4 +30,11 @@ BUILDING_STATS = {
         "max_workers": 0,
         "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
     },
+    "house": {
+        "cost": {
+            "food": 10,
+        },
+        "max_workers": 2,
+        "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
+    },
 }

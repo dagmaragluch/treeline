@@ -1,3 +1,4 @@
+from random import random
 from typing import (
     List
 )
@@ -22,6 +23,15 @@ class Building:
         self.valid_terrains = valid_terrains
 
     def get_resources(self) -> Resources:
+        pass
+
+    def add_workers(self, amount: int) -> bool:
+        pass
+
+    def subtract_workers(self, amount: int) -> bool:
+        pass
+
+    def can_make_child(self) -> bool:
         pass
 
 
@@ -74,7 +84,7 @@ class Farm(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, 1, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -89,7 +99,7 @@ class Sawmill(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, 1, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -104,13 +114,29 @@ class IronMine(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, 1, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         resources = Resources()
         iron_produced = self.workers * 1
         resources.add_resource(ResourceType.iron, iron_produced)
         return resources
+
+
+class House(ProducesBuilding):
+    def __init__(self):
+        stats = config.BUILDING_STATS["house"]
+        cost = Resources.from_dictionary(stats["cost"])
+        max_workers = stats["max_workers"]
+        valid_terrains = stats["valid_terrains"]
+        ProducesBuilding.__init__(self, 3, cost, max_workers, valid_terrains)
+
+    def get_resources(self) -> Resources:
+        return Resources()
+
+    def can_make_child(self) -> bool:
+        if self.workers == 2:
+            return random.choice([True, False])
 
 
 class TownHall(DefensiveBuilding):
@@ -128,5 +154,6 @@ building_types = {
     "farm": Farm,
     "sawmill": Sawmill,
     "iron_mine": IronMine,
+    "house": House,
     "town_hall": TownHall,
 }
