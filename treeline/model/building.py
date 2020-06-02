@@ -21,6 +21,9 @@ class Building:
         self.cost = cost
         self.valid_terrains = valid_terrains
 
+    def get_resources(self) -> Resources:
+        pass
+
 
 class ProducesBuilding(Building):
     def __init__(
@@ -116,6 +119,9 @@ class TownHall(DefensiveBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         valid_terrains = stats["valid_terrains"]
         DefensiveBuilding.__init__(self, 2, cost, valid_terrains)
+
+    def get_resources(self) -> Resources:
+        return Resources()
 
 
 building_types = {

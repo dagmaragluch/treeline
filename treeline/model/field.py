@@ -48,7 +48,7 @@ class Field(Actor):
         elif self.terrain == Terrain.mountain:
             produced_resources.add_resource(ResourceType.iron, 1)
 
-        if self.building and self.building.building_type == 1:  # chack if building is produce building
+        if self.building and self.building.building_type == 1:  # check if building is produce building
             produced_resources += self.building.get_resources()
         return produced_resources
 
