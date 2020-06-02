@@ -103,6 +103,7 @@ class Game:
                 start_field = self.board.get_random_field()
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
+            start_field.building = building_types["town_hall"]()  # build town hall on start field
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
         potem można dopisać więcej warunków, np. spr niezbędnej ilości zasobów'''
@@ -140,9 +141,11 @@ class Game:
 
         def coords_to_field(self, function: Callable):
             """Wrap function requiring field parameter into a function requiring (x,y) coordinates"""
+
             def wrapper(x: int, y: int):
                 field = self._get_field_function(x, y)
                 return function(field)
+
             return wrapper
 
     def add_receiver_callbacks(self, receiver: Receiver):
