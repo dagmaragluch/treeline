@@ -77,17 +77,27 @@ class Engine:
 
             self.screen.fill(BACKGROUND_COLOR)
 
+            pressed_actors = []
+            pressed_widgets = []
+
             for actor in self.actors:
                 if actor.shape and (viewport.contains_point(actor.position, radius=1)):
                     bounds = actor.shape.draw(
                         self.camera.transform(actor.position), self.screen)
                     if mouse_position and bounds.contains_point(mouse_position):
-                        actor.on_pressed()
+                        pressed_actors.append(actor)
 
             for widget in self.widgets:
                 bounds = widget.draw(self.screen)
                 if mouse_position and bounds.collidepoint(mouse_position):
+                    pressed_widgets.append(widget)
+
+            if pressed_widgets:
+                for widget in pressed_widgets:
                     widget.on_click()
+            else:
+                for actor in pressed_actors:
+                    actor.on_pressed()
 
             pygame.display.flip()
             prev_frame_time = this_frame_time
