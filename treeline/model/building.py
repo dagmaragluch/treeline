@@ -14,37 +14,33 @@ from treeline.model import building_config as config
 class Building:
     def __init__(
             self,
-            building_type: int,
             cost: Resources,
             valid_terrains: List[Terrain]
     ):
-        self.building_type = building_type
         self.cost = cost
         self.valid_terrains = valid_terrains
 
     def get_resources(self) -> Resources:
-        pass
+        return Resources()
 
     def add_workers(self, amount: int) -> bool:
-        pass
+        return False
 
     def subtract_workers(self, amount: int) -> bool:
-        pass
+        return False
 
     def can_make_child(self) -> bool:
-        pass
+        return False
 
 
 class ProducesBuilding(Building):
     def __init__(
             self,
-            building_type: int,
             cost: Resources,
             valid_terrains: List[Terrain],
             max_workers: int,
     ):
-        Building.__init__(self, building_type, cost, valid_terrains)
-        self.building_type = 1
+        Building.__init__(self, cost, valid_terrains)
         self.max_workers = max_workers
         self.workers = 0
 
@@ -67,13 +63,8 @@ class ProducesBuilding(Building):
 
 
 class DefensiveBuilding(Building):
-    def __init__(
-            self,
-            building_type: int,
-            cost: Resources,
-            valid_terrains: List[Terrain]
-    ):
-        self.building_type = 2,
+    def __init__(self, cost: Resources, valid_terrains: List[Terrain]):
+        Building.__init__(self, cost, valid_terrains)
         self.cost = cost
         self.valid_terrains = valid_terrains
 
@@ -84,7 +75,7 @@ class Farm(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, 1, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -99,7 +90,7 @@ class Sawmill(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, 1, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -114,7 +105,7 @@ class IronMine(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, 1, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -129,7 +120,7 @@ class House(ProducesBuilding):
         cost = Resources.from_dictionary(stats["cost"])
         max_workers = stats["max_workers"]
         valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, 3, cost, max_workers, valid_terrains)
+        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
 
     def get_resources(self) -> Resources:
         return Resources()
@@ -144,10 +135,7 @@ class TownHall(DefensiveBuilding):
         stats = config.BUILDING_STATS["town_hall"]
         cost = Resources.from_dictionary(stats["cost"])
         valid_terrains = stats["valid_terrains"]
-        DefensiveBuilding.__init__(self, 2, cost, valid_terrains)
-
-    def get_resources(self) -> Resources:
-        return Resources()
+        DefensiveBuilding.__init__(self, cost, valid_terrains)
 
 
 building_types = {

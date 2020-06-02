@@ -104,6 +104,7 @@ class Game:
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
             start_field.building = building_types["town_hall"]()  # build town hall on start field
+            LOGGER.debug("town_hall built on field (%d, %d)", start_field.position[0], start_field.position[1])
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
         potem można dopisać więcej warunków, np. spr niezbędnej ilości zasobów'''
@@ -127,10 +128,9 @@ class Game:
         for player_field in self._active_player.fields:
             self._active_player.resources += player_field.get_resources()
 
-            if player_field.building.building_type == 3:    # building is house
-                if player_field.building.can_make_child():  # try to make new worker
-                    self._active_player.total_workers += 1
-                    self._active_player.available_workers += 1
+            if player_field.building.can_make_child():  # try to make new worker
+                self._active_player.total_workers += 1
+                self._active_player.available_workers += 1
 
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
