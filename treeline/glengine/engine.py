@@ -8,6 +8,7 @@ from ctypes import sizeof, c_float, c_void_p
 import numpy as np
 from datetime import datetime
 from statistics import mean
+import math
 
 from treeline.glengine.actor import Actor
 from treeline.glengine.camera import Camera
@@ -16,7 +17,8 @@ from treeline.glengine.shape import Shape
 from treeline.glengine.matrices import identity, scale, translate
 
 LOGGER = logging.getLogger(__name__)
-
+WORLD_SCALE_VECTOR = np.array((1 / 4 * 3 * 2, 1 / 4 * math.sqrt(3) * 2, 1))
+WORLD_SCALE = scale(WORLD_SCALE_VECTOR)
 
 class Engine:
 
@@ -40,15 +42,15 @@ class Engine:
             flags=pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.OPENGL | pygame.HWSURFACE)
 
         size = pygame.display.get_surface().get_size()
-        self.screen_ratio = size[0] / size[1]
+        self.screen_ratio = scale((size[1] / size[0], 1.0))
         glViewport(0, 0, size[0], size[1])
         glClearColor(71 / 256, 95 / 256, 181 / 256, 1.0)
 
         self._setup()
         mvp_location = glGetUniformLocation(self.shader_program, "MVP"),
 
-        self.tile_size = (np.array([2, 2, 0]) / self.camera.fov)
-        self.projection = scale(self.tile_size)
+        self.tile_size = (np.array([1, 1, 0]) / self.camera.fov)
+        self.projection = self.screen_ratio @ scale(self.tile_size)
 
         # ++DEBUG
         this_frame_time = datetime.now()
@@ -130,7 +132,7 @@ class Engine:
         full_mvp_time = mean(self.mvp_times)
 
         LOGGER.info(f"Average render time: {full_render_time} ({1000 / full_render_time} XPS)")
-        LOGGER.info(f"Average mvp-calc time: {full_mvp_time} ({1000 / full_mvp_time} XPS)")
+        LOGGER.info(f"Average mvp time: {full_mvp_time} ({1000 / full_mvp_time} XPS)")
         # --DEBUG
 
     def quit(self):
@@ -150,7 +152,7 @@ class Engine:
         pass
 
     def _get_mvp(self, actor_position):
-        position = np.append(actor_position, 1)
+        position = WORLD_SCALE @ actor_position
         model = translate(position)
 
         return self.projection @ model
@@ -166,11 +168,12 @@ class Engine:
         vertex_shader = shaders.compileShader("""
                         #version 330
                         layout(location = 0) in vec2 pos;
+                        layout(location = 1) in vec2 uvIn;
                         out vec2 uv;
                         uniform mat3 MVP;
                         void main() {
                             gl_Position = vec4(MVP * vec3(pos, 1), 1);
-                            uv = pos;
+                            uv = uvIn;
                         }
             """, GL_VERTEX_SHADER)
 
@@ -203,3 +206,6 @@ class Engine:
         glBufferData(GL_ARRAY_BUFFER, Shape.vertex_data, GL_STATIC_DRAW)
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(c_float)*4, c_void_p(0))
         glEnableVertexAttribArray(0)
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(c_float)*4, c_void_p(sizeof(c_float)*2))
+        glEnableVertexAttribArray(1)

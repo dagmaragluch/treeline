@@ -5,6 +5,7 @@ from treeline.model.player import Player
 from treeline.model.resource import Resources
 from treeline.model.game import Game
 from treeline.interface.interface import Interface
+import cProfile
 
 if __name__ == '__main__':
     engine = Engine()
@@ -22,4 +23,5 @@ if __name__ == '__main__':
     for actor in game.get_all_actors():
         engine.add_actor(actor)
 
-    engine.start()
+    # engine.start()
+    cProfile.run("engine.start()", sort="cumtime")

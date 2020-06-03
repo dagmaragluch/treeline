@@ -6,24 +6,19 @@ from typing import (
 from treeline.model.terrain import Terrain
 from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
-from treeline.engine.actor import Actor
+from treeline.glengine.actor import Actor
 from treeline.model.building import Building
-from treeline.misc.shapes import Hexagon
-
-LOGGER = logging.getLogger(__name__)
-
-
 from treeline.glengine.shape import Splash
 import pygame
-picture = pygame.image.load("./resources/graphics/terrain/forest.png")
 
+LOGGER = logging.getLogger(__name__)
 hexagons = {
-    "grass": None,
+    "grass": Splash(pygame.image.load("./resources/graphics/terrain/grass.png")),
     "grass_highlight": None,
     "grass_red": None,
-    "forest": Splash(picture),
+    "forest": Splash(pygame.image.load("./resources/graphics/terrain/forest.png")),
     "forest_highlight": None,
-    "mountain": None,
+    "mountain": Splash(pygame.image.load("./resources/graphics/terrain/mountain.png")),
     "mountain_highlight": None
 }
 

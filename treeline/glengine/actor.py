@@ -1,11 +1,12 @@
 from typing import Tuple
 from treeline.glengine.shape import Shape
+import numpy as np
 
 
 class Actor:
 
     def __init__(self, position: Tuple[float, float] = None, shape: Shape = None):
-        self.position = position
+        self.position = np.append(position, 1)
         self.shape = shape
 
     def on_event(self, event):
