@@ -31,9 +31,8 @@ class Game:
         self._set_start_fields()
 
         self.decorators = Game.Decorators(self.board.get_field)
-        self.build("sawmill", board.get_field(0, 0))
 
-    def build(self, building_type: str, field: Field) -> bool:
+    def build(self, field: Field, building_type: str) -> bool:
         if field not in self._active_player.fields:
             LOGGER.debug("Cannot build. Field (%d, %d) does not belong to active player",
                          field.position[0], field.position[1])
@@ -170,9 +169,9 @@ class Game:
         def coords_to_field(self, function: Callable):
             """Wrap function requiring field parameter into a function requiring (x,y) coordinates"""
 
-            def wrapper(x: int, y: int):
+            def wrapper(x: int, y: int, *args, **kwargs):
                 field = self._get_field_function(x, y)
-                return function(field)
+                return function(field, *args, **kwargs)
 
             return wrapper
 
