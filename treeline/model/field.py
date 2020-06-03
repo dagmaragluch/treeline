@@ -36,6 +36,7 @@ class Field(Actor):
         self.terrain = terrain
         self.building = building
         self._owner = owner
+        self.price = {ResourceType.food: 5, ResourceType.wood: 0, ResourceType.iron: 1}
         self.click_callback = None
 
     def get_resources(self) -> Resources:
@@ -51,6 +52,14 @@ class Field(Actor):
         if self.building:
             produced_resources += self.building.get_resources()
         return produced_resources
+
+    def change_price_when_take_over(self):
+        self.price[ResourceType.food] += 5
+        self.price[ResourceType.iron] += 5
+
+    def change_price_when_neighbour_if_defensive_building(self):
+        self.price[ResourceType.food] += 5
+        self.price[ResourceType.iron] += 10
 
     def on_pressed(self):
         LOGGER.debug("Field with position (%d, %d) clicked", self.position[0], self.position[1])

@@ -11,7 +11,7 @@ from treeline.model.player import Player
 from treeline.model.board import Board
 from treeline.model.field import Field
 from treeline.model.building import building_types
-from treeline.model.resource import NegativeResourceError
+from treeline.model.resource import NegativeResourceError, ResourceType
 from treeline.Network.receiver import Receiver
 
 LOGGER = logging.getLogger(__name__)
@@ -57,8 +57,8 @@ class Game:
         if self._active_player.available_workers <= 0:
             LOGGER.debug("No available workers")
             return False
-        successfull = field.building.add_workers(1)
-        if not successfull:
+        successful = field.building.add_workers(1)
+        if not successful:
             LOGGER.debug("Cannot add worker to field (%d, %d)", field.position[0], field.position[1])
             return False
         self._active_player.available_workers -= 1
@@ -69,8 +69,8 @@ class Game:
         if not field.building:
             LOGGER.debug("Cannot remove workers to field with no building")
             return False
-        successfull = field.building.subtract_workers(1)
-        if not successfull:
+        successful = field.building.subtract_workers(1)
+        if not successful:
             LOGGER.debug("Cannot remove worker from field (%d, %d)", field.position[0], field.position[1])
             return False
         self._active_player.available_workers += 1
@@ -119,9 +119,22 @@ class Game:
                 return True
         return False
 
-    def take_over_field(self, field: Field):
-        if self._is_take_field_possible(field, self._active_player):  # pole spełnia warunki przejęcia
+    def take_over_field(self, field: Field) -> bool:
+        if self._is_take_field_possible(field, self._active_player):  # field borders with 1 player's field
+            try:
+                for r, p in field.price.items():  # check player resources
+                    self._active_player.resources.subtract_resource(r, p)
+            except NegativeResourceError:
+                LOGGER.debug("Not enough resources to take over field %d, %d", field.position[0], field.position[1])
+                return False
+
+            if field.owner == 0:  # if before field had not owner -> change price
+                field.change_price_when_take_over()
+
             self._update_field_owner(field, self._active_player)
+            LOGGER.debug("Player %d take over field %d, %d", self._active_player.player_number, field.position[0],
+                         field.position[1])
+            return True
 
     def end_turn(self):
         LOGGER.info("End turn for player %d", self._active_player.player_number)
@@ -134,6 +147,8 @@ class Game:
 
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
+
+        self.take_over_field(self.board.get_field(0, 0))  # !!!
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
 
     @property
