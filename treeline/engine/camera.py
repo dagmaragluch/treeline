@@ -25,7 +25,7 @@ class Camera(Actor):
     def setup(self, screen_size: np.array):
         self.screenSize = screen_size
         self.positionOnScreen = (screen_size[0] / 2, screen_size[1] / 2)
-        tile_size = self._get_tile_size()
+        tile_size = self.get_scale()
         self.tile_scale = scale(tile_size)
 
     def frame(self):
@@ -49,7 +49,7 @@ class Camera(Actor):
         if keys[pygame.K_d]:
             self.position = (self.position[0] + m, self.position[1])
 
-    def _get_tile_size(self):
+    def get_scale(self):
         return np.array([self.screenSize[0] / self.fov,
                          self.screenSize[0] / self.fov])
 

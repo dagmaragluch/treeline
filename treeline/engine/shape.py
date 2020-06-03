@@ -12,3 +12,6 @@ class Shape:
 
     def draw(self, transform: np.array, surface) -> matplotlib.path.Path:
         raise Exception("Shape.draw shall be overridden")
+
+    def scale(self, scale: np.array):
+        pass

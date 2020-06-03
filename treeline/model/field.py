@@ -9,19 +9,9 @@ from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
 from treeline.model.building import Building
 from treeline.misc.shapes import Hexagon
+from treeline.model.field_config import hexagons
 
 LOGGER = logging.getLogger(__name__)
-
-hexagons = {
-    "grass": Hexagon(color=(82, 235, 52)),
-    "grass_highlight": Hexagon(color=(102, 255, 72)),
-    "grass_red": Hexagon(color=(255, 235, 52)),  # not red at all
-    "forest": Hexagon(color=(21, 117, 2)),
-    "forest_highlight": Hexagon(color=(41, 137, 22)),
-    "mountain": Hexagon(color=(97, 77, 50)),
-    "mountain_highlight": Hexagon(color=(117, 97, 70))
-}
-
 
 class Field(Actor):
     def __init__(

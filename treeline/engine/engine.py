@@ -28,7 +28,7 @@ class Engine:
         self.screen = None
 
     def start(self):
-        self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.HWACCEL | pygame.HWSURFACE)
 
         if not self.camera:
             LOGGER.error("No camera set before engine started: aborting")
@@ -37,6 +37,11 @@ class Engine:
         screen_size = pygame.display.get_surface().get_size()
         LOGGER.debug(f"Screen size: {screen_size}")
         self.camera.setup(screen_size)
+
+        scale = tuple(map(int, self.camera.get_scale()))
+        for actor in self.actors:
+            if actor.shape:
+                actor.shape.scale(scale)
 
         self.running = True
 
@@ -76,7 +81,7 @@ class Engine:
                 actor.on_key(keys, delta_time)
 
             self.screen.fill(BACKGROUND_COLOR)
-
+            
             pressed_actors = []
             pressed_widgets = []
 
@@ -91,7 +96,7 @@ class Engine:
                 bounds = widget.draw(self.screen)
                 if mouse_position and bounds.collidepoint(mouse_position):
                     pressed_widgets.append(widget)
-
+                
             if pressed_widgets:
                 for widget in pressed_widgets:
                     widget.on_click()
