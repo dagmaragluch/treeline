@@ -138,10 +138,19 @@ class TownHall(DefensiveBuilding):
         DefensiveBuilding.__init__(self, cost, valid_terrains)
 
 
+class Tower(DefensiveBuilding):
+    def __init__(self):
+        stats = config.BUILDING_STATS["tower"]
+        cost = Resources.from_dictionary(stats["cost"])
+        valid_terrains = stats["valid_terrains"]
+        DefensiveBuilding.__init__(self, cost, valid_terrains)
+
+
 building_types = {
     "farm": Farm,
     "sawmill": Sawmill,
     "iron_mine": IronMine,
     "house": House,
     "town_hall": TownHall,
+    "tower": Tower,
 }

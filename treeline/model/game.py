@@ -11,7 +11,7 @@ from treeline.model.player import Player
 from treeline.model.board import Board
 from treeline.model.field import Field
 from treeline.model.building import building_types
-from treeline.model.resource import NegativeResourceError, ResourceType
+from treeline.model.resource import NegativeResourceError
 from treeline.Network.receiver import Receiver
 
 LOGGER = logging.getLogger(__name__)
@@ -47,8 +47,17 @@ class Game:
             return False
 
         field.building = building
+        self.update_fields_price(building_type, field)
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
         return True
+
+    # increase in the price of field with tower and its neighbours
+    def update_fields_price(self, building_type: str, field: Field):
+        if building_type == "tower" or building_type == "town_hall":
+            fields_to_update = self.board.get_neighbours(field)
+            fields_to_update.append(field)
+            for f in fields_to_update:
+                f.change_price_when_neighbour_if_defensive_building()
 
     def add_worker(self, field: Field) -> bool:
         if not field.building:
@@ -104,6 +113,7 @@ class Game:
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
             start_field.building = building_types["town_hall"]()  # build town hall on start field
+            self.update_fields_price("town_hall", start_field)
             LOGGER.debug("town_hall built on field (%d, %d)", start_field.position[0], start_field.position[1])
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
@@ -147,8 +157,6 @@ class Game:
 
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
-
-        self.take_over_field(self.board.get_field(0, 0))  # !!!
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
 
     @property

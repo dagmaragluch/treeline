@@ -23,6 +23,13 @@ BUILDING_STATS = {
         "max_workers": 8,
         "valid_terrains": [Terrain.mountain],
     },
+    "house": {
+        "cost": {
+            "food": 10,
+        },
+        "max_workers": 2,
+        "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
+    },
     "town_hall": {
         "cost": {
             "wood": 0,
@@ -30,11 +37,11 @@ BUILDING_STATS = {
         "max_workers": 0,
         "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
     },
-    "house": {
+    "tower": {
         "cost": {
-            "food": 10,
+            "wood": 30,
         },
-        "max_workers": 2,
+        "max_workers": 0,
         "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
     },
 }
