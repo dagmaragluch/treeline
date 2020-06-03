@@ -23,5 +23,5 @@ if __name__ == '__main__':
     for actor in game.get_all_actors():
         engine.add_actor(actor)
 
-    # engine.start()
-    cProfile.run("engine.start()", sort="cumtime")
+    engine.start()
+    # cProfile.run("engine.start()", sort="cumtime")

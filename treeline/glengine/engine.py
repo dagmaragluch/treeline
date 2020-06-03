@@ -39,7 +39,7 @@ class Engine:
 
     def start(self):
         self.screen = pygame.display.set_mode(
-            flags=pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.OPENGL | pygame.HWSURFACE)
+            flags=pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.OPENGL | pygame.HWSURFACE | pygame.HWACCEL)
 
         size = pygame.display.get_surface().get_size()
         self.screen_ratio = scale((size[1] / size[0], 1.0))
