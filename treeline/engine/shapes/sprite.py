@@ -3,6 +3,7 @@ from treeline.engine.shape import Shape
 import numpy as np
 from matplotlib.path import Path
 
+
 class Sprite(Shape):
 
     def __init__(self, texture: pygame.Surface):
@@ -15,4 +16,4 @@ class Sprite(Shape):
         return None
 
     def scale(self, scale: np.array):
-        self.texture = pygame.transform.scale(self.texture, scale)
+        self.texture = pygame.transform.scale(self.texture, scale).convert_alpha()
