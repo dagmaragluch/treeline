@@ -12,14 +12,19 @@ from treeline.misc.shapes import Hexagon
 
 LOGGER = logging.getLogger(__name__)
 
+
+from treeline.glengine.shape import Splash
+import pygame
+picture = pygame.image.load("./resources/graphics/terrain/forest.png")
+
 hexagons = {
-    "grass": Hexagon(color=(82, 235, 52)),
-    "grass_highlight": Hexagon(color=(102, 255, 72)),
-    "grass_red": Hexagon(color=(255, 235, 52)),  # not red at all
-    "forest": Hexagon(color=(21, 117, 2)),
-    "forest_highlight": Hexagon(color=(41, 137, 22)),
-    "mountain": Hexagon(color=(97, 77, 50)),
-    "mountain_highlight": Hexagon(color=(117, 97, 70))
+    "grass": None,
+    "grass_highlight": None,
+    "grass_red": None,
+    "forest": Splash(picture),
+    "forest_highlight": None,
+    "mountain": None,
+    "mountain_highlight": None
 }
 
 

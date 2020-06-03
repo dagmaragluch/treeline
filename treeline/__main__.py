@@ -1,11 +1,10 @@
-from treeline.engine.engine import Engine
+from treeline.glengine.engine import Engine
 from treeline.engine.camera import Camera
 from treeline.model.board import Board
 from treeline.model.player import Player
 from treeline.model.resource import Resources
 from treeline.model.game import Game
 from treeline.interface.interface import Interface
-
 
 if __name__ == '__main__':
     engine = Engine()

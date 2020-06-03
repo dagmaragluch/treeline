@@ -20,7 +20,8 @@ class Button(Widget):
 
     def draw(self, surface) -> pygame.Rect:
         if self.visible:
-            surface.blit(self.image, self.position)
+            pass
+            # surface.blit(self.image, self.position)
         return self.bounds
 
     def on_click(self):
