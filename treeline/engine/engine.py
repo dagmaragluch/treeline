@@ -28,7 +28,7 @@ class Engine:
         self.screen = None
 
     def start(self):
-        self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.HWACCEL | pygame.HWSURFACE)
 
         if not self.camera:
             LOGGER.error("No camera set before engine started: aborting")
