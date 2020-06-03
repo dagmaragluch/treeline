@@ -13,16 +13,18 @@ from treeline.model.field import Field
 from treeline.model.building import building_types
 from treeline.model.resource import NegativeResourceError
 from treeline.network.receiver import Receiver
+from treeline.network.sender import Sender
 
 LOGGER = logging.getLogger(__name__)
 
 
 class Game:
-    def __init__(self, board: Board, players: List[Player]):
+    def __init__(self, board: Board, players: List[Player], sender: Sender):
         self.board = board
         self.players = players
         self._active_player = players[0]
         self._active_player_index = 0
+        self.sender = sender
 
         self._selected_field: Optional[Field] = None
 
@@ -46,12 +48,13 @@ class Game:
             return False
 
         field.building = building
-        self.update_fields_price(building_type, field)
+        self._update_fields_price(building_type, field)
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
+        self.sender.send_build(building_type, field)
         return True
 
     # increase in the price of field with tower and its neighbours
-    def update_fields_price(self, building_type: str, field: Field):
+    def _update_fields_price(self, building_type: str, field: Field):
         if building_type == "tower" or building_type == "town_hall":
             fields_to_update = self.board.get_neighbours(field)
             fields_to_update.append(field)
@@ -71,6 +74,7 @@ class Game:
             return False
         self._active_player.available_workers -= 1
         LOGGER.debug("Added worker to field (%d, %d)", field.position[0], field.position[1])
+        self.sender.send_add_worker(field)
         return True
 
     def remove_worker(self, field: Field) -> bool:
@@ -83,6 +87,7 @@ class Game:
             return False
         self._active_player.available_workers += 1
         LOGGER.debug("Removed worker from field (%d, %d)", field.position[0], field.position[1])
+        self.sender.send_remove_worker(field)
         return True
 
     def _field_clicked(self, field: Field):
@@ -112,7 +117,7 @@ class Game:
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
             start_field.building = building_types["town_hall"]()  # build town hall on start field
-            self.update_fields_price("town_hall", start_field)
+            self._update_fields_price("town_hall", start_field)
             LOGGER.debug("town_hall built on field (%d, %d)", start_field.position[0], start_field.position[1])
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
@@ -143,6 +148,7 @@ class Game:
             self._update_field_owner(field, self._active_player)
             LOGGER.debug("Player %d take over field %d, %d", self._active_player.player_number, field.position[0],
                          field.position[1])
+            self.sender.send_take(field)
             return True
 
     def end_turn(self):
@@ -157,6 +163,7 @@ class Game:
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
+        self.sender.send_end_turn()
 
     @property
     def selected_field(self):
@@ -177,3 +184,7 @@ class Game:
 
     def add_receiver_callbacks(self, receiver: Receiver):
         receiver.callbacks["TAKE"] = self.decorators.coords_to_field(self.take_over_field)
+        receiver.callbacks["ADD"] = self.decorators.coords_to_field(self.add_worker)
+        receiver.callbacks["REMOVE"] = self.decorators.coords_to_field(self.remove_worker)
+        receiver.callbacks["END"] = self.end_turn
+        receiver.callbacks["BUILD"] = self.decorators.coords_to_field(self.build)
