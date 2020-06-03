@@ -12,7 +12,7 @@ from treeline.model.board import Board
 from treeline.model.field import Field
 from treeline.model.building import building_types
 from treeline.model.resource import NegativeResourceError
-from treeline.Network.receiver import Receiver
+from treeline.network.receiver import Receiver
 
 LOGGER = logging.getLogger(__name__)
 
