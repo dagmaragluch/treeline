@@ -1,3 +1,5 @@
+import socket
+
 from treeline.engine.engine import Engine
 from treeline.engine.camera import Camera
 from treeline.model.board import Board
@@ -13,6 +15,8 @@ if __name__ == '__main__':
     engine.set_camera(camera)
     engine.register_for_keys(camera)
 
+    sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sender.connect(("127.0.0.1", 2137))
     board = Board("./resources/maps/map1.csv")
     players = [Player(), Player()]
     game = Game(board, players)

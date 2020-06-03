@@ -1,6 +1,9 @@
+import logging
 import socket
 import threading
 from typing import List
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Receiver(threading.Thread):
@@ -19,9 +22,11 @@ class Receiver(threading.Thread):
         while True:
             data = self.s_socket.recv(2048)
             msg = data.decode()
-            # Huge if clause reacting to in-game on-click events
-            if msg == 'GAME_OVER' or msg == '':
+            if msg == 'OVER':
                 break
+            if msg == '':
+                LOGGER.debug("Empty msg received")
+
             self.handle_message(msg)
 
     def handle_message(self, msg: str):
