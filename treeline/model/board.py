@@ -45,20 +45,18 @@ class Board:
         list_of_neighbours = []
         x = field.position[0]
         y = field.position[1]
-        board_width = self._board.shape[1]
-        board_height = self._board.shape[0]
 
-        if (y + 2) < board_width:
+        if (y + 2) < self.width:
             list_of_neighbours.append(self._board[x][y + 2])
-        if (x + 1) < board_width and (y - 1) >= 0:
+        if (x + 1) < self.height and (y - 1) >= 0:
             list_of_neighbours.append(self._board[x + 1][y - 1])
         if (x - 1) >= 0 and (y - 1) >= 0:
             list_of_neighbours.append(self._board[x - 1][y - 1])
         if (y - 2) >= 0:
             list_of_neighbours.append(self._board[x][y - 2])
-        if (x - 1) >= 0 and (y + 1) < board_height:
+        if (x - 1) >= 0 and (y + 1) < self.width:
             list_of_neighbours.append(self._board[x - 1][y + 1])
-        if (x + 1) < board_width and (y + 1) < board_height:
+        if (x + 1) < self.height and (y + 1) < self.width:
             list_of_neighbours.append(self._board[x + 1][y + 1])
 
         LOGGER.info("Found %d neighbours for (%d, %d) field)", len(list_of_neighbours), x, y)
