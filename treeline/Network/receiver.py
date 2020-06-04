@@ -9,16 +9,18 @@ LOGGER = logging.getLogger(__name__)
 class Receiver(threading.Thread):
     def __init__(self, sender_address, sender_socket):
         threading.Thread.__init__(self)
-        receiver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        receiver.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        receiver.bind((sender_address, sender_socket))
-        receiver.listen(1)
-        sender_sock, sender_addr = receiver.accept()
-        self.s_socket = sender_sock
-        self.s_address = sender_addr
+        self.receiver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.receiver.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.receiver.bind((sender_address, sender_socket))
+        self.receiver.listen(1)
+        self.s_socket = None
+        self.s_address = None
         self.callbacks = {}
 
     def run(self):
+        sender_sock, sender_addr = self.receiver.accept()
+        self.s_socket = sender_sock
+        self.s_address = sender_addr
         while True:
             data = self.s_socket.recv(2048)
             msg = data.decode()
