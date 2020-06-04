@@ -3,6 +3,7 @@ import logging
 from treeline.engine.actor import Actor
 from treeline.engine.camera import Camera
 from treeline.engine.widget import Widget
+from treeline.engine.shape import Shape
 import numpy as np
 from datetime import datetime
 from typing import List
@@ -26,6 +27,7 @@ class Engine:
         self.events = {}
         self.keyWatchers = []
         self.screen = None
+        self.scale_schedule = []
 
     def start(self):
         self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.HWACCEL | pygame.HWSURFACE)
@@ -42,6 +44,8 @@ class Engine:
         for actor in self.actors:
             if actor.shape:
                 actor.shape.scale(scale)
+        for shape in self.scale_schedule:
+            shape.scale(scale)
 
         self.running = True
 
@@ -140,3 +144,6 @@ class Engine:
 
     def add_widget(self, widget: Widget):
         self.widgets.append(widget)
+
+    def scale(self, shape: Shape):
+        self.scale_schedule.append(shape)

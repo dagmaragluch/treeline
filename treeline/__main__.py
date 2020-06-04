@@ -7,6 +7,7 @@ from treeline.model.player import Player
 from treeline.model.resource import Resources
 from treeline.model.game import Game
 from treeline.interface.interface import Interface
+from treeline.model.field_config import hexagons
 
 
 if __name__ == '__main__':
@@ -26,5 +27,7 @@ if __name__ == '__main__':
         engine.add_widget(widget)
     for actor in game.get_all_actors():
         engine.add_actor(actor)
+    for t in hexagons:
+        engine.scale(hexagons[t])
 
     engine.start()
