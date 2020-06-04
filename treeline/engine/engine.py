@@ -41,9 +41,6 @@ class Engine:
         self.camera.setup(screen_size)
 
         scale = tuple(map(int, self.camera.get_scale()))
-        for actor in self.actors:
-            if actor.shape:
-                actor.shape.scale(scale)
         for shape in self.scale_schedule:
             shape.scale(scale)
 
