@@ -1,6 +1,7 @@
 from random import random
 from typing import (
-    List
+    List,
+    Tuple
 )
 
 from treeline.model.resource import (
@@ -9,16 +10,21 @@ from treeline.model.resource import (
 )
 from treeline.model.field import Terrain
 from treeline.model import building_config as config
+from treeline.engine.actor import Actor
+from treeline.engine.shapes.sprite import Sprite
 
 
-class Building:
+class Building(Actor):
     def __init__(
             self,
             cost: Resources,
-            valid_terrains: List[Terrain]
+            valid_terrains: List[Terrain],
+            position: Tuple[int, int],
+            sprite: Sprite,
     ):
         self.cost = cost
         self.valid_terrains = valid_terrains
+        Actor.__init__(self, position, sprite)
 
     def get_resources(self) -> Resources:
         return Resources()
@@ -33,19 +39,18 @@ class Building:
         return False
 
 
-class ProducesBuilding(Building):
+class ProductionBuilding(Building):
     def __init__(
             self,
             cost: Resources,
             valid_terrains: List[Terrain],
             max_workers: int,
+            position: Tuple[int, int],
+            sprite: Sprite,
     ):
-        Building.__init__(self, cost, valid_terrains)
+        Building.__init__(self, cost, valid_terrains, position, sprite)
         self.max_workers = max_workers
         self.workers = 0
-
-    def get_resources(self) -> Resources:
-        raise NotImplementedError
 
     def add_workers(self, amount: int) -> bool:
         total_workers = self.workers + amount
@@ -63,19 +68,22 @@ class ProducesBuilding(Building):
 
 
 class DefensiveBuilding(Building):
-    def __init__(self, cost: Resources, valid_terrains: List[Terrain]):
-        Building.__init__(self, cost, valid_terrains)
+    def __init__(
+            self,
+            cost: Resources,
+            valid_terrains: List[Terrain],
+            position: Tuple[int, int],
+            sprite: Sprite,
+    ):
+        Building.__init__(self, cost, valid_terrains, position, sprite)
         self.cost = cost
         self.valid_terrains = valid_terrains
 
 
-class Farm(ProducesBuilding):
-    def __init__(self):
+class Farm(ProductionBuilding):
+    def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["farm"]
-        cost = Resources.from_dictionary(stats["cost"])
-        max_workers = stats["max_workers"]
-        valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
+        ProductionBuilding.__init__(self, position=position, **stats)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -84,13 +92,10 @@ class Farm(ProducesBuilding):
         return resources
 
 
-class Sawmill(ProducesBuilding):
-    def __init__(self):
+class Sawmill(ProductionBuilding):
+    def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["sawmill"]
-        cost = Resources.from_dictionary(stats["cost"])
-        max_workers = stats["max_workers"]
-        valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
+        ProductionBuilding.__init__(self, position=position, **stats)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -99,13 +104,10 @@ class Sawmill(ProducesBuilding):
         return resources
 
 
-class IronMine(ProducesBuilding):
-    def __init__(self):
+class IronMine(ProductionBuilding):
+    def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["iron_mine"]
-        cost = Resources.from_dictionary(stats["cost"])
-        max_workers = stats["max_workers"]
-        valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
+        ProductionBuilding.__init__(self, position=position, **stats)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -114,16 +116,10 @@ class IronMine(ProducesBuilding):
         return resources
 
 
-class House(ProducesBuilding):
-    def __init__(self):
+class House(ProductionBuilding):
+    def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["house"]
-        cost = Resources.from_dictionary(stats["cost"])
-        max_workers = stats["max_workers"]
-        valid_terrains = stats["valid_terrains"]
-        ProducesBuilding.__init__(self, cost, max_workers, valid_terrains)
-
-    def get_resources(self) -> Resources:
-        return Resources()
+        ProductionBuilding.__init__(self, position=position, **stats)
 
     def can_make_child(self) -> bool:
         if self.workers == 2:
@@ -131,19 +127,15 @@ class House(ProducesBuilding):
 
 
 class TownHall(DefensiveBuilding):
-    def __init__(self):
+    def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["town_hall"]
-        cost = Resources.from_dictionary(stats["cost"])
-        valid_terrains = stats["valid_terrains"]
-        DefensiveBuilding.__init__(self, cost, valid_terrains)
+        DefensiveBuilding.__init__(self, position=position, **stats)
 
 
 class Tower(DefensiveBuilding):
-    def __init__(self):
+    def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["tower"]
-        cost = Resources.from_dictionary(stats["cost"])
-        valid_terrains = stats["valid_terrains"]
-        DefensiveBuilding.__init__(self, cost, valid_terrains)
+        DefensiveBuilding.__init__(self, position=position, **stats)
 
 
 building_types = {

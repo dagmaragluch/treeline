@@ -20,7 +20,7 @@ if __name__ == '__main__':
     # sender.connect(("127.0.0.1", 2137))
     board = Board("./resources/maps/map3.csv")
     players = [Player(), Player()]
-    game = Game(board, players)
+    game = Game(board, players, engine)
     interface = Interface(game)
 
     for widget in interface.widgets:

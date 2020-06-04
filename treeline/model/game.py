@@ -7,6 +7,7 @@ from typing import (
 )
 
 from treeline.engine.actor import Actor
+from treeline.engine.engine import Engine
 from treeline.model.player import Player
 from treeline.model.board import Board
 from treeline.model.field import Field
@@ -19,9 +20,11 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Game:
-    def __init__(self, board: Board, players: List[Player]):
+    def __init__(self, board: Board, players: List[Player], engine: Engine):
         self.board = board
         self.players = players
+        self.engine = engine
+
         self._active_player = players[0]
         self._active_player_index = 0
         # self.sender = sender
@@ -41,7 +44,7 @@ class Game:
                          field.position[0], field.position[1])
             return False
 
-        building = building_types[building_type]()
+        building = building_types[building_type](field.position)
         try:
             self._active_player.resources -= building.cost
         except NegativeResourceError:
@@ -49,6 +52,7 @@ class Game:
             return False
 
         field.building = building
+        self.engine.add_actor(building)
         self._update_fields_price(building_type, field)
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
         # self.sender.send_build(building_type, field)
@@ -111,7 +115,10 @@ class Game:
             pass  # manage the click in some other way
 
     def get_all_actors(self) -> Iterator[Actor]:
-        yield from self.board.get_all_fields()
+        for field in self.board.get_all_fields():
+            yield field
+            if field.building:
+                yield field.building
 
     @staticmethod
     def _update_field_owner(field: Field, player: Player):
@@ -126,7 +133,7 @@ class Game:
                 start_field = self.board.get_random_field()
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
-            start_field.building = building_types["town_hall"]()  # build town hall on start field
+            start_field.building = building_types["town_hall"](start_field.position)  # build town hall on start field
             self._update_fields_price("town_hall", start_field)
             LOGGER.debug("town_hall built on field (%d, %d)", start_field.position[0], start_field.position[1])
 
@@ -160,6 +167,7 @@ class Game:
                          field.position[1])
             # self.sender.send_take(field)
             return True
+        LOGGER.debug("Take over of field %d %d is not possible", field.position[0], field.position[1])
 
     def end_turn(self):
         LOGGER.info("End turn for player %d", self._active_player.player_number)
