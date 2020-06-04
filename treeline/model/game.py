@@ -27,6 +27,7 @@ class Game:
         # self.sender = sender
 
         self._selected_field: Optional[Field] = None
+        self.selected_field_interface_callback: Optional[Callable] = None
 
         for field in self.board.get_all_fields():
             field.click_callback = self._field_clicked
@@ -62,6 +63,10 @@ class Game:
                 f.change_price_when_neighbour_if_defensive_building()
 
     def add_worker(self, field: Field) -> bool:
+        if field not in self._active_player.fields:
+            LOGGER.debug("Cannot add worker. Field (%d, %d) does not belong to active player",
+                         field.position[0], field.position[1])
+            return False
         if not field.building:
             LOGGER.debug("Cannot add workers to field with no building")
             return False
@@ -78,6 +83,10 @@ class Game:
         return True
 
     def remove_worker(self, field: Field) -> bool:
+        if field not in self._active_player.fields:
+            LOGGER.debug("Cannot substract worker. Field (%d, %d) does not belong to active player",
+                         field.position[0], field.position[1])
+            return False
         if not field.building:
             LOGGER.debug("Cannot remove workers to field with no building")
             return False
@@ -97,6 +106,7 @@ class Game:
             if self._selected_field:
                 self._selected_field.highlight_off()
             self._selected_field = field
+            self.selected_field_interface_callback()
         else:
             pass  # manage the click in some other way
 
@@ -168,6 +178,10 @@ class Game:
     @property
     def selected_field(self):
         return self._selected_field
+
+    @property
+    def active_player(self):
+        return self._active_player
 
     class Decorators:
         def __init__(self, get_field_function: Callable):
