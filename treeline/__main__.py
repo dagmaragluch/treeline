@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     # sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # sender.connect(("127.0.0.1", 2137))
-    board = Board("./resources/maps/map1.csv")
+    board = Board("./resources/maps/map3.csv")
     players = [Player(), Player()]
     game = Game(board, players)
     interface = Interface(game)
