@@ -61,9 +61,7 @@ class Board:
         if (x + 1) < self.height and (y + 1) < self.width:
             list_of_neighbours.append(self._board[x + 1][y + 1])
 
-        for n in list_of_neighbours:
-            if n is None:
-                list_of_neighbours.remove(n)
+        list_of_neighbours = [field for field in list_of_neighbours if field is not None]
 
         LOGGER.info("Found %d neighbours for (%d, %d) field)", len(list_of_neighbours), x, y)
         return list_of_neighbours
@@ -92,7 +90,12 @@ class Board:
         return self.get_field(x, y)
 
 
-# b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map3.csv")
-# # for f in b.get_all_fields():
-# #     print(f.__dict__)
-# print(b.get_random_field().terrain)
+b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map3.csv")
+# for f in b.get_all_fields():
+#     print(f.__dict__)
+
+# a = b.get_random_field()
+# a = b.get_field(10, 4)
+# for n in b.get_neighbours(a):
+#     print(n.terrain)
+# print(len(b.get_neighbours(a)))
