@@ -18,3 +18,4 @@ class Sprite(Shape):
 
     def scale(self, scale: np.array):
         self.texture = pygame.transform.scale(self.texture, scale).convert_alpha()
+        self.mask = pygame.mask.from_surface(self.texture)
