@@ -1,7 +1,6 @@
 import pygame
 from typing import Tuple
 import numpy as np
-import matplotlib.path
 
 
 class Shape:
@@ -10,8 +9,8 @@ class Shape:
     Don't use it directly.
     """
 
-    def draw(self, transform: np.array, surface) -> matplotlib.path.Path:
-        raise Exception("Shape.draw shall be overridden")
+    def draw(self, transform: np.array, surface) -> Tuple[pygame.Mask, Tuple[int, int]]:
+        raise NotImplementedError
 
     def scale(self, scale: np.array):
         pass

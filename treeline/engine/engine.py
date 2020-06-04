@@ -87,10 +87,14 @@ class Engine:
 
             for actor in self.actors:
                 if actor.shape and (viewport.contains_point(actor.position, radius=1)):
-                    bounds = actor.shape.draw(
-                        self.camera.transform(actor.position), self.screen)
-                    if mouse_position and bounds.contains_point(mouse_position):
-                        pressed_actors.append(actor)
+                    bounds = actor.shape.draw(self.camera.transform(actor.position), self.screen)
+                    if mouse_position:
+                        relative_position = [mouse_position[i] - bounds[1][i] for i in range(len(bounds[1]))]
+                        try: 
+                            if bounds[0].get_at(relative_position):
+                                pressed_actors.append(actor)
+                        except IndexError: 
+                            pass
 
             for widget in self.widgets:
                 bounds = widget.draw(self.screen)

@@ -8,7 +8,6 @@ from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
 from treeline.model.building import Building
-from treeline.misc.shapes import Hexagon
 from treeline.model.field_config import hexagons
 
 LOGGER = logging.getLogger(__name__)
