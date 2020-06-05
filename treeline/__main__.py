@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     board = Board("./resources/maps/map3.csv")
     players = [Player(), Player()]
-    game = Game(board, players, sender, engine)
+    game = Game(board, players, 0, sender, engine)
 
     if receiver is not None:
         game.add_receiver_callbacks(receiver)

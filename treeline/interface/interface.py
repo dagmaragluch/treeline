@@ -4,6 +4,7 @@ from treeline.model.game import Game
 from treeline.model.building_config import BUILDING_STATS
 from treeline.engine.widget import Widget
 from treeline.interface.button import Button
+from treeline.interface.resource_bar import ResourceBar
 import pygame
 
 
@@ -18,11 +19,14 @@ class Interface:
         self._worker_buttons = self._create_worker_buttons()
         self._building_buttons = self._create_building_buttons()
 
+        self._resource_bar = ResourceBar(game.local_player)
+
         self.widgets = [
             self._end_turn_button,
             self._take_over_button,
             *self._worker_buttons,
             *self._building_buttons,
+            self._resource_bar
         ]
 
         self._on_field_selected()

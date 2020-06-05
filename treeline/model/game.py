@@ -21,11 +21,12 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Game:
-    def __init__(self, board: Board, players: List[Player], sender: Sender, engine: Engine):
+    def __init__(self, board: Board, players: List[Player], local_player_number: int, sender: Sender, engine: Engine):
         self.board = board
         self.players = players
         self.engine = engine
 
+        self.local_player = players[local_player_number]
         self._active_player = players[0]
         self._active_player_index = 0
         self.sender = sender
