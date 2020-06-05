@@ -90,7 +90,7 @@ class Board:
         return self.get_field(x, y)
 
 
-b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map3.csv")
+# b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map3.csv")
 # for f in b.get_all_fields():
 #     print(f.__dict__)
 

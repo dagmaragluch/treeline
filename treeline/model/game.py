@@ -15,19 +15,20 @@ from treeline.model.building import building_types
 from treeline.model.resource import NegativeResourceError
 from treeline.network.receiver import Receiver
 # from treeline.network.sender import Sender
+from treeline.network.sender import Sender
 
 LOGGER = logging.getLogger(__name__)
 
 
 class Game:
-    def __init__(self, board: Board, players: List[Player], engine: Engine):
+    def __init__(self, board: Board, players: List[Player], sender: Sender, engine: Engine):
         self.board = board
         self.players = players
         self.engine = engine
 
         self._active_player = players[0]
         self._active_player_index = 0
-        # self.sender = sender
+        self.sender = sender
 
         self._selected_field: Optional[Field] = None
         self.selected_field_interface_callback: Optional[Callable] = None
@@ -55,7 +56,8 @@ class Game:
         self.engine.add_actor(building)
         self._update_fields_price(building_type, field)
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
-        # self.sender.send_build(building_type, field)
+        if self.sender is not None:
+            self.sender.send_build(building_type, field)
         return True
 
     # increase in the price of field with tower and its neighbours
@@ -83,7 +85,8 @@ class Game:
             return False
         self._active_player.available_workers -= 1
         LOGGER.debug("Added worker to field (%d, %d)", field.position[0], field.position[1])
-        # self.sender.send_add_worker(field)
+        if self.sender is not None:
+            self.sender.send_add_worker(field)
         return True
 
     def remove_worker(self, field: Field) -> bool:
@@ -100,7 +103,8 @@ class Game:
             return False
         self._active_player.available_workers += 1
         LOGGER.debug("Removed worker from field (%d, %d)", field.position[0], field.position[1])
-        # self.sender.send_remove_worker(field)
+        if self.sender is not None:
+            self.sender.send_remove_worker(field)
         return True
 
     def _field_clicked(self, field: Field):
@@ -165,7 +169,8 @@ class Game:
             self._update_field_owner(field, self._active_player)
             LOGGER.debug("Player %d take over field %d, %d", self._active_player.player_number, field.position[0],
                          field.position[1])
-            # self.sender.send_take(field)
+            if self.sender is not None:
+                self.sender.send_take(field)
             return True
         LOGGER.debug("Take over of field %d %d is not possible", field.position[0], field.position[1])
 
@@ -181,7 +186,8 @@ class Game:
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
-        # self.sender.send_end_turn()
+        if self.sender is not None:
+            self.sender.send_end_turn()
 
     @property
     def selected_field(self):
