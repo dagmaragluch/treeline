@@ -16,10 +16,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 if __name__ == '__main__':
-    engine = Engine()
-    #camera = Camera((0, 0), fov=16)
-    #engine.set_camera(camera)
-    #engine.register_for_keys(camera)
 
     addr = None
     your_port = None
@@ -48,6 +44,7 @@ if __name__ == '__main__':
 
         time.sleep(attempt * 5)
 
+    engine = Engine()
     board = Board("./resources/maps/map3.csv")
     players = [Player(), Player()]
     game = Game(board, players, 0, sender, engine)
