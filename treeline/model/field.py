@@ -30,7 +30,7 @@ class Field(Actor):
         self.building = building
         self._owner = owner
         self.price = {ResourceType.food: 5, ResourceType.wood: 0, ResourceType.iron: 1}
-        self.limit = config_limit[terrain.name]
+        self.available_resources = config_limit[terrain.name].copy()  # copy !
         self.click_callback = None
 
     def get_resources(self) -> Resources:
@@ -40,6 +40,21 @@ class Field(Actor):
 
         if self.building:
             produced_resources += self.building.get_resources()
+
+        for res_type in ResourceType:  # update available resources
+            if produced_resources.get_resource(res_type) != 0:
+                # check if resources are available
+                if self.available_resources[res_type] >= produced_resources.get_resource(res_type):
+                    self.available_resources[res_type] -= produced_resources.get_resource(res_type)
+
+                elif self.available_resources[res_type] > 0:  # if available res. > 0, but < "normal" production
+                    produced_resources.subtract_resource(res_type, produced_resources.get_resource(res_type) -
+                                                         self.available_resources[res_type])
+                    self.available_resources[res_type] = 0
+
+                else:  # if available resources < 0
+                    produced_resources.subtract_resource(res_type, produced_resources.get_resource(res_type))
+
         return produced_resources
 
     def change_price_when_take_over(self):
