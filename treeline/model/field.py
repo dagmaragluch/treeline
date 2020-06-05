@@ -9,8 +9,12 @@ from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
 from treeline.model.building import Building
 from treeline.model.field_config import hexagons
+from treeline.model.resource_config import resources_per_turn as config_per_turn
+from treeline.model.resource_config import resources_limit as config_limit
+from treeline.model.resource_config import prices_increase as config_prices
 
 LOGGER = logging.getLogger(__name__)
+
 
 class Field(Actor):
     def __init__(
@@ -26,29 +30,25 @@ class Field(Actor):
         self.building = building
         self._owner = owner
         self.price = {ResourceType.food: 5, ResourceType.wood: 0, ResourceType.iron: 1}
+        self.limit = config_limit[terrain.name]
         self.click_callback = None
 
     def get_resources(self) -> Resources:
         produced_resources = Resources()
-        if self.terrain == Terrain.grass:
-            produced_resources.add_resource(ResourceType.food, 2)
-        elif self.terrain == Terrain.forest:
-            produced_resources.add_resource(ResourceType.food, 1)
-            produced_resources.add_resource(ResourceType.wood, 2)
-        elif self.terrain == Terrain.mountain:
-            produced_resources.add_resource(ResourceType.iron, 1)
+        for res_type in ResourceType:
+            produced_resources.add_resource(res_type, config_per_turn[self.terrain.name][res_type])
 
         if self.building:
             produced_resources += self.building.get_resources()
         return produced_resources
 
     def change_price_when_take_over(self):
-        self.price[ResourceType.food] += 5
-        self.price[ResourceType.iron] += 5
+        for res_type in ResourceType:
+            self.price[res_type] += config_prices["take_over"][res_type]
 
     def change_price_when_neighbour_if_defensive_building(self):
-        self.price[ResourceType.food] += 5
-        self.price[ResourceType.iron] += 10
+        for res_type in ResourceType:
+            self.price[res_type] += config_prices["by_defense"][res_type]
 
     def on_pressed(self):
         LOGGER.debug("Field with position (%d, %d) clicked", self.position[0], self.position[1])
