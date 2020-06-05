@@ -8,7 +8,7 @@ from treeline.model.resource import Resources
 from treeline.model.resource import ResourceType
 from treeline.engine.actor import Actor
 from treeline.model.building import Building
-from treeline.model.field_config import hexagons
+from treeline.model.sprite_config import sprites
 
 LOGGER = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ class Field(Actor):
             building: Building = None,
             owner: int = 0
     ):
-        shape = hexagons[terrain.name]
+        shape = sprites[terrain.name]
         Actor.__init__(self, position, shape)
         self.terrain = terrain
         self.building = building
@@ -55,10 +55,10 @@ class Field(Actor):
         self.click_callback(self)
 
     def highlight(self):
-        self.shape = hexagons[f"{self.terrain.name}_highlight"]
+        self.shape = sprites[f"{self.terrain.name}_highlight"]
 
     def highlight_off(self):
-        self.shape = hexagons[self.terrain.name]
+        self.shape = sprites[self.terrain.name]
 
     @property
     def owner(self):
@@ -66,5 +66,5 @@ class Field(Actor):
 
     @owner.setter
     def owner(self, owner):
-        self.shape = hexagons["grass_red"]  # TODO update textures here
+        #self.shape = hexagons["grass_red"]  # TODO update textures here
         self._owner = owner

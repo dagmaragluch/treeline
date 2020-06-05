@@ -12,6 +12,7 @@ from treeline.model.field import Terrain
 from treeline.model import building_config as config
 from treeline.engine.actor import Actor
 from treeline.engine.shapes.sprite import Sprite
+from treeline.model.sprite_config import sprites
 
 
 class Building(Actor):
@@ -83,7 +84,7 @@ class DefensiveBuilding(Building):
 class Farm(ProductionBuilding):
     def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["farm"]
-        ProductionBuilding.__init__(self, position=position, **stats)
+        ProductionBuilding.__init__(self, position=position, sprite=sprites["farm"], **stats)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -95,7 +96,7 @@ class Farm(ProductionBuilding):
 class Sawmill(ProductionBuilding):
     def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["sawmill"]
-        ProductionBuilding.__init__(self, position=position, **stats)
+        ProductionBuilding.__init__(self, position=position, sprite=sprites["sawmill"], **stats)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -107,7 +108,7 @@ class Sawmill(ProductionBuilding):
 class IronMine(ProductionBuilding):
     def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["iron_mine"]
-        ProductionBuilding.__init__(self, position=position, **stats)
+        ProductionBuilding.__init__(self, position=position, sprite=sprites["iron_mine"], **stats)
 
     def get_resources(self) -> Resources:
         resources = Resources()
@@ -119,7 +120,7 @@ class IronMine(ProductionBuilding):
 class House(ProductionBuilding):
     def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["house"]
-        ProductionBuilding.__init__(self, position=position, **stats)
+        ProductionBuilding.__init__(self, position=position, sprite=sprites["house"], **stats)
 
     def can_make_child(self) -> bool:
         if self.workers == 2:
@@ -129,13 +130,13 @@ class House(ProductionBuilding):
 class TownHall(DefensiveBuilding):
     def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["town_hall"]
-        DefensiveBuilding.__init__(self, position=position, **stats)
+        DefensiveBuilding.__init__(self, position=position, sprite=sprites["town_hall"], **stats)
 
 
 class Tower(DefensiveBuilding):
     def __init__(self, position: Tuple[int, int]):
         stats = config.BUILDING_STATS["tower"]
-        DefensiveBuilding.__init__(self, position=position, **stats)
+        DefensiveBuilding.__init__(self, position=position, sprite=sprites["tower"], **stats)
 
 
 building_types = {
