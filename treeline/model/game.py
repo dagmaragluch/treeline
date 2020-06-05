@@ -31,7 +31,7 @@ class Game:
         self.sender = sender
 
         self._selected_field: Optional[Field] = None
-        self.selected_field_interface_callback: Optional[Callable] = None
+        self.update_interface_callback: Optional[Callable] = lambda: None
 
         for field in self.board.get_all_fields():
             field.click_callback = self._field_clicked
@@ -55,6 +55,7 @@ class Game:
         field.building = building
         self.engine.add_actor(building)
         self._update_fields_price(building_type, field)
+        self.update_interface_callback()
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
         if self.sender is not None:
             self.sender.send_build(building_type, field)
@@ -114,7 +115,7 @@ class Game:
             if self._selected_field:
                 self._selected_field.highlight_off()
             self._selected_field = field
-            self.selected_field_interface_callback()
+            self.update_interface_callback()
         else:
             pass  # manage the click in some other way
 
@@ -132,14 +133,14 @@ class Game:
     def _set_start_fields(self):
         taken_fields = []
         for player in self.players:
+            self._active_player = player
             start_field = self.board.get_random_field()
             while start_field in taken_fields:
                 start_field = self.board.get_random_field()
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
-            start_field.building = building_types["town_hall"](start_field.position)  # build town hall on start field
-            self._update_fields_price("town_hall", start_field)
-            LOGGER.debug("town_hall built on field (%d, %d)", start_field.position[0], start_field.position[1])
+            self.build(start_field, "town_hall")  # build town hall on start field
+        self._active_player = self.players[0]
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
         potem można dopisać więcej warunków, np. spr niezbędnej ilości zasobów'''
@@ -167,6 +168,7 @@ class Game:
                 field.change_price_when_take_over()
 
             self._update_field_owner(field, self._active_player)
+            self.update_interface_callback()
             LOGGER.debug("Player %d take over field %d, %d", self._active_player.player_number, field.position[0],
                          field.position[1])
             if self.sender is not None:

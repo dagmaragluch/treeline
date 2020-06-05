@@ -10,7 +10,7 @@ import pygame
 class Interface:
     def __init__(self, game: Game, resolution: Tuple[int, int] = (1920, 1080)):
         self.game = game
-        game.selected_field_interface_callback = self._on_field_selected
+        game.update_interface_callback = self._on_field_selected
         self.resolution = resolution
 
         self._end_turn_button = self._create_end_turn_button()
