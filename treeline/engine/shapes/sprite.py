@@ -6,8 +6,8 @@ from typing import Tuple
 
 class Sprite(Shape):
 
-    def __init__(self, texture: pygame.Surface):
-        self.texture = texture
+    def __init__(self, texture: pygame.Surface, scale: np.array):
+        self.texture = pygame.transform.scale(texture, scale).convert_alpha()
         self.mask = pygame.mask.from_surface(self.texture)
 
     def draw(self, transform: np.array, surface: pygame.Surface) -> Tuple[pygame.Mask, Tuple[int, int]]:

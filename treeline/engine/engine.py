@@ -4,6 +4,7 @@ from treeline.engine.actor import Actor
 from treeline.engine.camera import Camera
 from treeline.engine.widget import Widget
 from treeline.engine.shape import Shape
+from treeline.model.sprite_config import load_sprites
 import numpy as np
 from datetime import datetime
 from typing import List
@@ -21,15 +22,12 @@ class Engine:
         pygame.init()
         pygame.display.set_caption("Treeline")
         self.running = False
-        self.camera = None
+        self.camera = Camera((0, 0), fov=16)
         self.actors = []
         self.widgets = []
         self.events = {}
         self.keyWatchers = []
-        self.screen = None
-        self.scale_schedule = []
-
-    def start(self):
+        self.register_for_keys(self.camera)
         self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.HWACCEL | pygame.HWSURFACE)
 
         if not self.camera:
@@ -41,9 +39,9 @@ class Engine:
         self.camera.setup(screen_size)
 
         scale = tuple(map(int, self.camera.get_scale()))
-        for shape in self.scale_schedule:
-            shape.scale(scale)
+        load_sprites(scale)
 
+    def start(self):
         self.running = True
 
         this_frame_time = datetime.now()
@@ -142,5 +140,3 @@ class Engine:
     def add_widget(self, widget: Widget):
         self.widgets.append(widget)
 
-    def scale(self, shape: Shape):
-        self.scale_schedule.append(shape)

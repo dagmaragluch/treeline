@@ -5,7 +5,6 @@ import time
 from treeline.engine.engine import Engine
 from treeline.engine.camera import Camera
 from treeline.model.board import Board
-from treeline.model.field_config import hexagons
 from treeline.model.player import Player
 from treeline.model.resource import Resources
 from treeline.model.game import Game
@@ -18,9 +17,9 @@ LOGGER = logging.getLogger(__name__)
 
 if __name__ == '__main__':
     engine = Engine()
-    camera = Camera((0, 0), fov=16)
-    engine.set_camera(camera)
-    engine.register_for_keys(camera)
+    #camera = Camera((0, 0), fov=16)
+    #engine.set_camera(camera)
+    #engine.register_for_keys(camera)
 
     addr = None
     your_port = None
@@ -62,7 +61,5 @@ if __name__ == '__main__':
         engine.add_widget(widget)
     for actor in game.get_all_actors():
         engine.add_actor(actor)
-    for t in hexagons:
-        engine.scale(hexagons[t])
 
     engine.start()
