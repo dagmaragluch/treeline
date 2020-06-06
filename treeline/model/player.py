@@ -20,4 +20,4 @@ class Player:
         self.fields: List[Field] = []
         self.available_workers = 10
         self.total_workers = 10
-        self.start_field: Field
+        self.start_field = None

@@ -168,6 +168,9 @@ class Game:
             if not field.owner:  # if before field had not owner -> change price
                 field.change_price_when_take_over()
 
+            if field.building is not None:
+                self.take_over_building(field)
+
             self._update_field_owner(field, self._active_player)
             self.update_interface_callback()
             LOGGER.debug("Player %d take over field %d, %d", self._active_player.player_number, field.position[0],
@@ -182,6 +185,14 @@ class Game:
         if workers > 0:
             field.building.subtract_workers(workers)
             self.players[field.owner].available_workers += workers
+        self.check_win(field)
+        LOGGER.info("Player %d take over building with %d workers ", self._active_player.player_number,
+                    field.building.get_number_of_workers())
+
+    def check_win(self, field: Field) -> bool:
+        if field == self.players[field.owner].start_field:
+            LOGGER.info("Player %d win! :-) ", self._active_player.player_number)
+            return True
 
     def end_turn(self):
         LOGGER.info("End turn for player %d", self._active_player.player_number)
