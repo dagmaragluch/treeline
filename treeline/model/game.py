@@ -139,6 +139,7 @@ class Game:
                 start_field = self.board.get_random_start_field(player.player_number)
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
+            player.start_field = start_field
             self.build(start_field, "town_hall")  # build town hall on start field
         self._active_player = self.players[0]
 
@@ -176,7 +177,7 @@ class Game:
             return True
         LOGGER.debug("Take over of field %d %d is not possible", field.position[0], field.position[1])
 
-    def take_over_building(self, field: Field):     # działa na CHYBA
+    def take_over_building(self, field: Field):  # działa na CHYBA
         workers = field.building.get_number_of_workers()
         if workers > 0:
             field.building.subtract_workers(workers)
