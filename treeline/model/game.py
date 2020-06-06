@@ -182,7 +182,7 @@ class Game:
         for player_field in self._active_player.fields:
             self._active_player.resources += player_field.get_resources()
 
-            if player_field.building.can_make_child():  # try to make new worker
+            if player_field.building and player_field.building.can_make_child():  # try to make new worker
                 self._active_player.total_workers += 1
                 self._active_player.available_workers += 1
 
