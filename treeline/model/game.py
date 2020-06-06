@@ -165,7 +165,7 @@ class Game:
                 LOGGER.debug("Not enough resources to take over field %d, %d", field.position[0], field.position[1])
                 return False
 
-            if field.owner == 0:  # if before field had not owner -> change price
+            if not field.owner:  # if before field had not owner -> change price
                 field.change_price_when_take_over()
 
             self._update_field_owner(field, self._active_player)

@@ -1,6 +1,7 @@
 import logging
 from typing import (
     Tuple,
+    Optional
 )
 
 from treeline.model.terrain import Terrain
@@ -22,7 +23,7 @@ class Field(Actor):
             position: Tuple[int, int],
             terrain: Terrain,
             building: Building = None,
-            owner: int = 0
+            owner: Optional[int] = None
     ):
         shape = sprites[terrain.name]
         Actor.__init__(self, position, shape)
