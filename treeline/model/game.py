@@ -14,7 +14,6 @@ from treeline.model.field import Field
 from treeline.model.building import building_types
 from treeline.model.resource import NegativeResourceError
 from treeline.network.receiver import Receiver
-# from treeline.network.sender import Sender
 from treeline.network.sender import Sender
 
 LOGGER = logging.getLogger(__name__)
@@ -135,9 +134,9 @@ class Game:
         taken_fields = []
         for player in self.players:
             self._active_player = player
-            start_field = self.board.get_random_field()
+            start_field = self.board.get_random_start_field(player.player_number)
             while start_field in taken_fields:
-                start_field = self.board.get_random_field()
+                start_field = self.board.get_random_start_field(player.player_number)
             taken_fields.append(start_field)
             self._update_field_owner(start_field, player)
             self.build(start_field, "town_hall")  # build town hall on start field
@@ -176,6 +175,12 @@ class Game:
                 self.sender.send_take(field)
             return True
         LOGGER.debug("Take over of field %d %d is not possible", field.position[0], field.position[1])
+
+    def take_over_building(self, field: Field):     # działa na CHYBA
+        workers = field.building.get_number_of_workers()
+        if workers > 0:
+            field.building.subtract_workers(workers)
+            self.players[field.owner].available_workers += workers
 
     def end_turn(self):
         LOGGER.info("End turn for player %d", self._active_player.player_number)

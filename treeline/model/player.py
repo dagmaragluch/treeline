@@ -11,7 +11,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Player:
-    current_number = 1
+    current_number = 0
 
     def __init__(self):
         self.player_number = Player.current_number

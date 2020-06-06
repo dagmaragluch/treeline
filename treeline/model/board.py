@@ -89,13 +89,13 @@ class Board:
             y = random.randrange(0, self.width)
         return self.get_field(x, y)
 
+    def get_random_start_field(self, number_of_player: int) -> Field:
+        if number_of_player == 0:  # first
+            x = 0
+        else:  # second
+            x = self.height - 1
 
-# b = Board("C:\\Users\\gluch\\Desktop\\python zawada\\treeline\\resources\\maps\\map3.csv")
-# for f in b.get_all_fields():
-#     print(f.__dict__)
-
-# a = b.get_random_field()
-# a = b.get_field(10, 4)
-# for n in b.get_neighbours(a):
-#     print(n.terrain)
-# print(len(b.get_neighbours(a)))
+        y = random.randrange(0, self.width)
+        while (x + y) % 2 != 0 or self.get_field(x, y) is None:
+            y = random.randrange(0, self.width)
+        return self.get_field(x, y)

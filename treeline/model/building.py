@@ -39,6 +39,9 @@ class Building(Actor):
     def can_make_child(self) -> bool:
         return False
 
+    def get_number_of_workers(self) -> int:
+        return 0
+
 
 class ProductionBuilding(Building):
     def __init__(
@@ -66,6 +69,9 @@ class ProductionBuilding(Building):
             return False
         self.workers = total_workers
         return True
+
+    def get_number_of_workers(self) -> int:
+        return self.workers
 
 
 class DefensiveBuilding(Building):
