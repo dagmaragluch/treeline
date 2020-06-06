@@ -13,25 +13,25 @@ class Sender:
 
     def send_take(self, field: Field):
         x, y = field.position
-        msg = "TAKE_{}_{}".format(x, y)
+        msg = "TAKE {} {}".format(x, y)
         LOGGER.debug(msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 
     def send_build(self, building_type: str, field: Field):
         x, y = field.position
-        msg = "BUILD_{}_{}_{}".format(x, y, building_type)
+        msg = "BUILD {} {} {}".format(x, y, building_type)
         LOGGER.debug(msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 
     def send_add_worker(self, field: Field):
         x, y = field.position
-        msg = "ADD_{}_{}".format(x, y)
+        msg = "ADD {} {}".format(x, y)
         LOGGER.debug(msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 
     def send_remove_worker(self, field: Field):
         x, y = field.position
-        msg = "REMOVE_{}_{}".format(x, y)
+        msg = "REMOVE {} {}".format(x, y)
         LOGGER.debug(msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 

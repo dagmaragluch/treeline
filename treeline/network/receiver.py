@@ -28,11 +28,11 @@ class Receiver(threading.Thread):
                 break
             if msg == '':
                 LOGGER.debug("Empty msg received")
-
+            LOGGER.debug("Received %s", msg)
             self.handle_message(msg)
 
     def handle_message(self, msg: str):
-        words = msg.split("_")
+        words = msg.split(" ")
         command = words[0]
         params = words[1:]
         params = self._parse_params(params)

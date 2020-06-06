@@ -51,6 +51,7 @@ if __name__ == '__main__':
 
     if receiver is not None:
         game.add_receiver_callbacks(receiver)
+        LOGGER.debug(receiver.callbacks)
 
     interface = Interface(game)
 
