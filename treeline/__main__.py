@@ -59,5 +59,7 @@ if __name__ == '__main__':
         engine.add_widget(widget)
     for actor in game.get_all_actors():
         engine.add_actor(actor)
+    for player in players:
+        engine.add_actor(player.border)
 
     engine.start()

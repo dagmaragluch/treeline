@@ -9,6 +9,9 @@ class Shape:
     Don't use it directly.
     """
 
+    def __init__(self):
+        self.primitive = False
+
     def draw(self, transform: np.array, surface) -> Tuple[pygame.Mask, Tuple[int, int]]:
         raise NotImplementedError
 

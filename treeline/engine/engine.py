@@ -22,7 +22,7 @@ class Engine:
         pygame.init()
         pygame.display.set_caption("Treeline")
         self.running = False
-        self.camera = Camera((0, 0), fov=16)
+        self.camera = Camera((0, 0), fov=16, speed=10)
         self.actors = []
         self.widgets = []
         self.events = {}
@@ -85,9 +85,9 @@ class Engine:
             pressed_widgets = []
 
             for actor in self.actors:
-                if actor.shape and (viewport.contains_point(actor.position, radius=1)):
+                if actor.primitive or actor.shape and (viewport.contains_point(actor.position, radius=1)):
                     bounds = actor.shape.draw(self.camera.transform(actor.position), self.screen)
-                    if mouse_position:
+                    if mouse_position and bounds:
                         relative_position = [mouse_position[i] - bounds[1][i] for i in range(len(bounds[1]))]
                         try: 
                             if bounds[0].get_at(relative_position):

@@ -6,6 +6,7 @@ from typing import (
 from treeline.model.field import Field
 from treeline.model.resource import Resources
 from treeline.model.resource_config import STARTING_RESOURCES
+from treeline.model.border import Border
 
 LOGGER = logging.getLogger(__name__)
 
@@ -21,3 +22,4 @@ class Player:
         self.available_workers = 10
         self.total_workers = 10
         self.start_field = None
+        self.border = Border()

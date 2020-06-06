@@ -7,6 +7,7 @@ class Actor:
     def __init__(self, position: Tuple[float, float] = None, shape: Shape = None):
         self.position = position
         self.shape = shape
+        self.primitive = not shape or shape.primitive
 
     def on_event(self, event):
         """

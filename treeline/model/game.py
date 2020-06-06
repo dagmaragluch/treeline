@@ -125,10 +125,14 @@ class Game:
             if field.building:
                 yield field.building
 
-    @staticmethod
-    def _update_field_owner(field: Field, player: Player):
+    def _update_field_owner(self, field: Field, player: Player):
         field.owner = player.player_number  # update ownera pola
         player.fields.append(field)  # dodanie pola do listy pól gracza
+        self.update_border()
+
+    def update_border(self):
+        border_fields = self.board.get_border_of(self._active_player.fields)
+        self._active_player.border.advanced_calculations(border_fields)
 
     def _set_start_fields(self):
         taken_fields = []
@@ -138,8 +142,9 @@ class Game:
             while start_field in taken_fields:
                 start_field = self.board.get_random_start_field(player.player_number)
             taken_fields.append(start_field)
-            self._update_field_owner(start_field, player)
             player.start_field = start_field
+            player.border.position = start_field.position
+            self._update_field_owner(start_field, player)
             self.build(start_field, "town_hall")  # build town hall on start field
         self._active_player = self.players[0]
 

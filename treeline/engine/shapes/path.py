@@ -8,15 +8,17 @@ from matplotlib.path import Path
 Not deprecated anymore but not tested, don't use.
 """
 
-class Polygon(Shape):
+class Path(Shape):
 
     def __init__(self, color: Tuple[int, int, int] = (255, 255, 255)):
-        self.points = []
+        self.lines = []
         self.color = color
+        self.primitive = True
 
     def draw(self, transform: np.array, surface) -> Path:
-        transformed_shape = [transform.dot(point) for point in self.points]
-        raw_points = np.delete(transformed_shape, 2, 1)
+        for line in self.lines:
+            transformed = [tuple(map(int, transform.dot((*point, 1)))) for point in line]
+            raw = list(map(tuple, np.delete(transformed, 2, 1)))
+            pygame.draw.line(surface, self.color, *raw, 5)            
 
-        pygame.draw.polygon(surface, self.color, raw_points, 10)
         return None # Not clickable

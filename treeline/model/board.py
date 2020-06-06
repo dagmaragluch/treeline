@@ -99,3 +99,11 @@ class Board:
         while (x + y) % 2 != 0 or self.get_field(x, y) is None:
             y = random.randrange(0, self.width)
         return self.get_field(x, y)
+
+    def get_border_of(self, fields: List[Field]):
+        border_fields = []
+        for field in fields:
+            for neighbour in self.get_neighbours(field):
+                if neighbour.owner != field.owner:
+                    border_fields.append((field, neighbour))
+        return border_fields
