@@ -45,7 +45,7 @@ if __name__ == '__main__':
         time.sleep(attempt * 5)
 
     engine = Engine()
-    board = Board("./resources/maps/map3.csv")
+    board = Board("./resources/maps/map2.csv")
     players = [Player(), Player()]
     game = Game(board, players, 0, sender, engine)
 
