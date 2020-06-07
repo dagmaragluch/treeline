@@ -26,7 +26,7 @@ class Receiver(threading.Thread):
         while True:
             data = self.s_socket.recv(2048)
             msgs = data.decode()
-            for msg in msgs.split(";")
+            for msg in msgs.split(";"):
                 if msg == 'OVER':
                     break
                 elif msg == '':
