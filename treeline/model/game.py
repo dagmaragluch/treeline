@@ -138,6 +138,8 @@ class Game:
                 yield field.building
 
     def _update_field_owner(self, field: Field, player: Player):
+        if field.owner is not None:
+            self.players[field.owner].fields.remove(field)
         field.owner = player.player_number  # update ownera pola
         player.fields.append(field)  # dodanie pola do listy pól gracza
         self.update_border()
