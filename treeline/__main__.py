@@ -17,6 +17,7 @@ LOGGER = logging.getLogger(__name__)
 
 if __name__ == '__main__':
 
+    your_addr = None
     enemy_addr = None
     your_port = None
     p2_port = None
@@ -28,10 +29,11 @@ if __name__ == '__main__':
     player_number = 0
 
     if online:
+        your_addr = input("Your IP address: ")
         enemy_addr = input("Enemy IP address: ")
         your_port = int(input("Your port: "))  # TODO: Fix popup window
         p2_port = int(input("Type second player's port: "))
-        receiver = Receiver("127.0.0.1", your_port)
+        receiver = Receiver(your_addr, your_port)
         receiver.start()
 
     while online:
