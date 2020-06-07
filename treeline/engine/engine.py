@@ -114,6 +114,7 @@ class Engine:
 
         LOGGER.info(f"Lagged frames: {lag_frames} / {total_frames}")
         LOGGER.info(f"Average FPS: {1000 / mean(frame_times)}")
+        pygame.quit()
 
     def quit(self):
         self._running = False
