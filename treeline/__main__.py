@@ -74,4 +74,5 @@ if __name__ == '__main__':
 
     game.start()
     engine.start()
+    sender.send_game_over()
     receiver.join()
