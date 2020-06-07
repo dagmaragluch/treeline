@@ -48,6 +48,10 @@ class Sender:
         msg = "READY"
         self.send(msg)
 
+    def send_syncworkers(self, total_workers: int, available_workers: int):
+        msg = "SYNCWORKERS {} {}".format(total_workers, available_workers)
+        self.send(msg)
+
     def send(self, msg: str):
         LOGGER.debug("Sent %s", msg)
         msg = msg+";"

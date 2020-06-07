@@ -63,7 +63,6 @@ class Board:
 
         list_of_neighbours = [field for field in list_of_neighbours if field is not None]
 
-        LOGGER.info("Found %d neighbours for (%d, %d) field)", len(list_of_neighbours), x, y)
         return list_of_neighbours
 
     def get_all_fields(self) -> List[Field]:

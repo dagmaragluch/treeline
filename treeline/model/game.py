@@ -236,6 +236,7 @@ class Game:
 
         if self._can_send_message():
             self.sender.send_end_turn()
+            self.sender.send_syncworkers(self._active_player.total_workers, self._active_player.available_workers)
 
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
@@ -245,6 +246,11 @@ class Game:
 
     def _can_send_message(self):
         return self.sender and self._active_player is self.local_player
+
+    def sync_workers(self, total_workers: int, available_workers: int):
+        enemy = (self._active_player_index + 1) % len(self.players)
+        self.players[enemy].total_workers = total_workers
+        self.players[enemy].available_workers = available_workers
 
     @property
     def selected_field(self):
@@ -274,4 +280,5 @@ class Game:
         receiver.callbacks["END"] = self.end_turn
         receiver.callbacks["BUILD"] = self.decorators.coords_to_field(self.build)
         receiver.callbacks["START"] = self.decorators.coords_to_field(self.set_start_field)
+        receiver.callbacks["SYNCWORKERS"] = self.sync_workers
         receiver.player_ready = True

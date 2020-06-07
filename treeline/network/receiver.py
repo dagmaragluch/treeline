@@ -30,7 +30,7 @@ class Receiver(threading.Thread):
                 if msg == 'OVER':
                     break
                 elif msg == '':
-                    LOGGER.debug("Empty msg received")
+                    pass
                 elif msg == 'READY':
                     self.enemy_ready = True
                 else:
