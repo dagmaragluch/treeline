@@ -12,5 +12,5 @@ class ResourceBar(Label):
         self.player = player
 
     def draw(self, surface) -> pygame.Rect:
-        self.text = str(self.player.resources)
+        self.text = f"{str(self.player.resources)}, workers: {self.player.available_workers}/{self.player.total_workers}"
         return Label.draw(self, surface)

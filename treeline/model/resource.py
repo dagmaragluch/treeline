@@ -48,7 +48,7 @@ class Resources:
     def get_remaining(self, required: Resources):
         remaining = Resources()
         for res_type, required_amount in required._resource_dict.items():
-            remaining._resource_dict[res_type] = max(required_amount, self._resource_dict[res_type])
+            remaining._resource_dict[res_type] = min(required_amount, self._resource_dict[res_type])
 
         return remaining
 

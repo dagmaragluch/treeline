@@ -230,8 +230,8 @@ class Game:
         self._active_player = self.players[self._active_player_index]
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
         self.set_interface_lock(self._active_player is not self.local_player)
+        self.update_interface_callback()
 
-            
     def _can_send_message(self):
         return self.sender and self._active_player is self.local_player
 
