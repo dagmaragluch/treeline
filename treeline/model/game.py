@@ -32,6 +32,7 @@ class Game:
 
         self._selected_field: Optional[Field] = None
         self.update_interface_callback: Optional[Callable] = lambda: None
+        self.set_interface_lock: Optional[Callable] = None
 
         for field in self.board.get_all_fields():
             field.click_callback = self._field_clicked
@@ -41,6 +42,7 @@ class Game:
     def start(self):
         if self.local_player.player_number == 0:
             self._set_start_fields()
+            self.set_interface_lock(False)
 
     def build(self, field: Field, building_type: str) -> bool:
         if field not in self._active_player.fields:
@@ -221,11 +223,14 @@ class Game:
                 self._active_player.total_workers += 1
                 self._active_player.available_workers += 1
 
+        if self._can_send_message():
+            self.sender.send_end_turn()
+
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
-        if self._can_send_message():
-            self.sender.send_end_turn()
+        self.set_interface_lock(self._active_player is not self.local_player)
+
             
     def _can_send_message(self):
         return self.sender and self._active_player is self.local_player

@@ -16,6 +16,8 @@ class Interface:
     def __init__(self, game: Game, resolution: Tuple[int, int] = (1920, 1080)):
         self.game = game
         game.update_interface_callback = self._on_field_selected
+        game.set_interface_lock = self.set_lock
+        self.locked = True
         self.resolution = resolution
         self.font = pygame.freetype.SysFont("Comic Sans MS", 24)
 
@@ -42,6 +44,10 @@ class Interface:
 
     def _on_field_selected(self):
         self._hide_all_context_buttons()
+        if self.locked:
+            self._hide_widgets(self._end_turn_button)
+            return
+        self._show_widgets(self._end_turn_button)
         selected_field = self.game.selected_field
         if not selected_field:
             return
@@ -152,3 +158,6 @@ class Interface:
         self._hide_widgets(self._worker_buttons)
         self._hide_widgets(self._worker_counter)
         self._hide_widgets(self._building_buttons)
+
+    def set_lock(self, lock: bool):
+        self.locked = lock
