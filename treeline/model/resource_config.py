@@ -7,49 +7,40 @@ STARTING_RESOURCES = {
 }
 resources_per_turn = {
     "grass": {
-        ResourceType.food: 2,
-        ResourceType.wood: 0,
-        ResourceType.iron: 0,
+        "food": 2,
     },
     "forest": {
-        ResourceType.food: 1,
-        ResourceType.wood: 2,
-        ResourceType.iron: 0,
+        "food": 1,
+        "wood": 2,
     },
     "mountain": {
-        ResourceType.food: 0,
-        ResourceType.wood: 0,
-        ResourceType.iron: 1,
+        "iron": 1,
     }
 }
 
 resources_limit = {
     "grass": {
-        ResourceType.food: 100,
-        ResourceType.wood: 0,
-        ResourceType.iron: 0,
+        "food": 100,
     },
     "forest": {
-        ResourceType.food: 100,
-        ResourceType.wood: 50,
-        ResourceType.iron: 0,
+        "food": 100,
+        "wood": 50,
     },
     "mountain": {
-        ResourceType.food: 0,
-        ResourceType.wood: 0,
-        ResourceType.iron: 100,
+        "iron": 100,
     }
 }
 
-prices_increase = {
-    "take_over": {
-        ResourceType.food: 5,
-        ResourceType.wood: 0,
-        ResourceType.iron: 5,
+field_prices = {
+    "neutral": {
+        "food": 5,
     },
-    "by_defense": {
-        ResourceType.food: 5,
-        ResourceType.wood: 0,
-        ResourceType.iron: 10,
+    "take_over": {
+        "food": 5,
+        "iron": 5,
+    },
+    "defended": {
+        "food": 5,
+        "iron": 10,
     }
 }

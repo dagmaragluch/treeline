@@ -147,6 +147,7 @@ class Game:
             self._update_field_owner(start_field, player)
             self.build(start_field, "town_hall")  # build town hall on start field
         self._active_player = self.players[0]
+        self.engine.camera.position = self._active_player.fields[0].position
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
         potem można dopisać więcej warunków, np. spr niezbędnej ilości zasobów'''
@@ -164,8 +165,7 @@ class Game:
     def take_over_field(self, field: Field) -> bool:
         if self._is_take_field_possible(field, self._active_player):  # field borders with 1 player's field
             try:
-                for r, p in field.price.items():  # check player resources
-                    self._active_player.resources.subtract_resource(r, p)
+                self._active_player.resources -= field.price
             except NegativeResourceError:
                 LOGGER.debug("Not enough resources to take over field %d, %d", field.position[0], field.position[1])
                 return False
