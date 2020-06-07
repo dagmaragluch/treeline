@@ -62,4 +62,5 @@ if __name__ == '__main__':
     for player in players:
         engine.add_actor(player.border)
 
+    game.start()
     engine.start()

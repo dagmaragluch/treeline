@@ -35,9 +35,11 @@ class Game:
 
         for field in self.board.get_all_fields():
             field.click_callback = self._field_clicked
-        self._set_start_fields()
 
         self.decorators = Game.Decorators(self.board.get_field)
+
+    def start(self):
+        self._set_start_fields()
 
     def build(self, field: Field, building_type: str) -> bool:
         if field not in self._active_player.fields:
