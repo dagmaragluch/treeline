@@ -145,16 +145,19 @@ class Game:
         self.update_border()
 
     def update_border(self):
-        border_fields = self.board.get_border_of(self._active_player.fields)
-        self._active_player.border.advanced_calculations(border_fields)
+        for player in self.players:
+            border_fields = self.board.get_border_of(player.fields)
+            player.border.advanced_calculations(border_fields)
 
     def set_start_field(self, field: Field, player_number: int):
         self.players[player_number].start_field = field
         self.players[player_number].border.position = field.position
+        self.update_border()
         self._update_field_owner(field, self.players[player_number])
         field.building = building_types["townhall"](field.position)
         self.engine.add_actor(field.building)
         self._update_fields_price("townhall", field)
+        self.engine.camera.position = field.position
         if self._can_send_message():
             self.sender.send_start(field, player_number)
 
