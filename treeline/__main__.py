@@ -63,7 +63,7 @@ if __name__ == '__main__':
         LOGGER.debug("Enemy not ready, trying again, wait {} seconds".format(2 * attempt))
         time.sleep(2 * attempt)
 
-    interface = Interface(game)
+    interface = Interface(game, (1366, 768))
 
     for widget in interface.widgets:
         engine.add_widget(widget)

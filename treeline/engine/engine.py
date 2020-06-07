@@ -28,7 +28,8 @@ class Engine:
         self.events = {}
         self.keyWatchers = []
         self.register_for_keys(self.camera)
-        self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.HWACCEL | pygame.HWSURFACE)
+        # self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN | pygame.HWACCEL | pygame.HWSURFACE)
+        self.screen = pygame.display.set_mode((1366, 768) , pygame.HWACCEL | pygame.HWSURFACE)
 
         if not self.camera:
             LOGGER.error("No camera set before engine started: aborting")
