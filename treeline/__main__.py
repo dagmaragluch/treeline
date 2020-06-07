@@ -26,7 +26,7 @@ if __name__ == '__main__':
     receiver = None
     sender = None
     attempt = 0
-    player_number = 0
+    player_number = int(input("Player number: "))
 
     if online:
         your_addr = input("Your IP address: ")
@@ -43,7 +43,6 @@ if __name__ == '__main__':
             sender = Sender(enemy_addr, p2_port)
             break
         except ConnectionRefusedError:
-            player_number = 1
             LOGGER.debug("Connection refused, trying again, wait {} seconds".format(attempt * 5))
 
         time.sleep(attempt * 5)
