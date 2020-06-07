@@ -98,7 +98,7 @@ class Engine:
 
             for widget in self.widgets:
                 bounds = widget.draw(self.screen)
-                if mouse_position and bounds.collidepoint(mouse_position) and widget.visible:
+                if bounds and mouse_position and bounds.collidepoint(mouse_position) and widget.visible:
                     pressed_widgets.append(widget)
                 
             if pressed_widgets:

@@ -8,13 +8,13 @@ class Icon(Widget):
     def __init__(
             self,
             position: Tuple[int, int],
-            image: pygame.Surface,
+            sprite: pygame.Surface
     ):
         Widget.__init__(self, position)
-        self.image = image
-        self.bounds = image.get_rect().move(position)
+        self.sprite = sprite
+        self.bounds = sprite.texture.get_rect().move(position)
 
     def draw(self, surface) -> pygame.Rect:
         if self.visible:
-            surface.blit(self.image, self.position)
+            self.sprite.draw_static(self.position, surface)
         return self.bounds

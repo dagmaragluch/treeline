@@ -10,6 +10,7 @@ from treeline.interface.icon import Icon
 from treeline.interface.resource_bar import ResourceBar
 import pygame
 import pygame.freetype
+from treeline.model.sprite_config import sprites
 
 
 class Interface:
@@ -66,44 +67,39 @@ class Interface:
             return
 
     def _create_interface_bar(self) -> Icon:
-        image = pygame.image.load("./resources/graphics/buttons/bar.png")
         x = 0
         y = self.resolution[1] * 9 // 10
-        return Icon((x, y), image)
+        return Icon((x, y), sprites["bar_button"])
 
     def _create_end_turn_button(self) -> Button:
-        image = pygame.image.load("./resources/graphics/buttons/end_turn.png")
         x = self.resolution[0] * 85 // 100
         y = self.resolution[1] * 93 // 100
 
-        return Button((x, y), image, self.game.end_turn)
+        return Button((x, y), sprites["end_turn_button"], self.game.end_turn)
 
     def _create_take_over_button(self):
-        image = pygame.image.load("./resources/graphics/buttons/take_over.png")
         x = self.resolution[0] * 2 // 10
         y = self.resolution[1] * 93 // 100
 
         def take_over_callback():
             return self.game.take_over_field(self.game.selected_field)
 
-        return Button((x, y), image, take_over_callback)
+        return Button((x, y), sprites["take_over_button"], take_over_callback)
 
     def _create_worker_buttons(self) -> List[Button]:
-        add_image = pygame.image.load("./resources/graphics/buttons/add_worker.png")
         x = self.resolution[0] * 25 // 100
         y = self.resolution[1] * 93 // 100
 
         def add_worker_callback():
             return self.game.add_worker(self.game.selected_field)
-        add_worker_button = Button((x, y), add_image, add_worker_callback)
+        add_worker_button = Button((x, y), sprites["add_worker_button"], add_worker_callback)
 
-        remove_image = pygame.image.load("./resources/graphics/buttons/remove_worker.png")
         x = self.resolution[0] * 3 // 10
         y = self.resolution[1] * 93 // 100
 
         def remove_worker_callback():
             return self.game.remove_worker(self.game.selected_field)
-        remove_worker_button = Button((x, y), remove_image, remove_worker_callback)
+        remove_worker_button = Button((x, y), sprites["remove_worker_button"], remove_worker_callback)
 
         return [add_worker_button, remove_worker_button]
 
@@ -121,7 +117,7 @@ class Interface:
         for i, building_type in enumerate(BUILDING_STATS):
             if building_type == "townhall":  # cannot build townhall
                 continue
-            image = pygame.image.load(f"./resources/graphics/buttons/{building_type}.png")
+            image = sprites[f"{building_type}_button"]
             x = self.resolution[0] * 1//10 + 100 * i
             y = self.resolution[1] * 95 // 100
 
