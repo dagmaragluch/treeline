@@ -14,46 +14,43 @@ class Sender:
     def send_take(self, field: Field):
         x, y = field.position
         msg = "TAKE {} {}".format(x, y)
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_build(self, building_type: str, field: Field):
         x, y = field.position
         msg = "BUILD {} {} {}".format(x, y, building_type)
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_add_worker(self, field: Field):
         x, y = field.position
         msg = "ADD {} {}".format(x, y)
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_remove_worker(self, field: Field):
         x, y = field.position
         msg = "REMOVE {} {}".format(x, y)
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_start(self, field: Field, player_number: int):
         x, y = field.position
         msg = "START {} {} {}".format(x, y, player_number)
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_end_turn(self):
         msg = "END"
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_game_over(self):
         msg = "OVER"
-        LOGGER.debug("Sent %s", msg)
-        self.sender.sendall(bytes(msg, 'UTF-8'))
+        self.send(msg)
 
     def send_ready(self):
         msg = "READY"
+        self.send(msg)
+
+    def send(self, msg: str):
         LOGGER.debug("Sent %s", msg)
+        msg = msg+";"
         self.sender.sendall(bytes(msg, 'UTF-8'))
 
     def close(self):
