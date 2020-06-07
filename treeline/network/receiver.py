@@ -25,16 +25,17 @@ class Receiver(threading.Thread):
         self.s_address = sender_addr
         while True:
             data = self.s_socket.recv(2048)
-            msg = data.decode()
-            if msg == 'OVER':
-                break
-            elif msg == '':
-                LOGGER.debug("Empty msg received")
-            elif msg == 'READY':
-                self.enemy_ready = True
-            else:
-                LOGGER.debug("Received %s", msg)
-                self.handle_message(msg)
+            msgs = data.decode()
+            for msg in msgs.split(";")
+                if msg == 'OVER':
+                    break
+                elif msg == '':
+                    LOGGER.debug("Empty msg received")
+                elif msg == 'READY':
+                    self.enemy_ready = True
+                else:
+                    LOGGER.debug("Received %s", msg)
+                    self.handle_message(msg)
 
     def handle_message(self, msg: str):
         words = msg.split(" ")
