@@ -26,7 +26,7 @@ class Sender:
     def send_add_worker(self, field: Field):
         x, y = field.position
         msg = "ADD {} {}".format(x, y)
-        LOGGER.debug(msg)
+        LOGGER.debug("Sent %s", msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 
     def send_remove_worker(self, field: Field):
@@ -42,6 +42,11 @@ class Sender:
 
     def send_game_over(self):
         msg = "OVER"
+        LOGGER.debug(msg)
+        self.sender.sendall(bytes(msg, 'UTF-8'))
+
+    def send_ready(self):
+        msg = "READY"
         LOGGER.debug(msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 

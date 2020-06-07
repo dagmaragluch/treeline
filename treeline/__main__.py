@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
     if online:
         addr = "127.0.0.1"
-        your_port = int(input("Your port"))  # TODO: Fix popup window
-        p2_port = int(input("Type second player's port"))
+        your_port = int(input("Your port: "))  # TODO: Fix popup window
+        p2_port = int(input("Type second player's port: "))
         receiver = Receiver(addr, your_port)
         receiver.start()
 
@@ -51,7 +51,15 @@ if __name__ == '__main__':
 
     if receiver is not None:
         game.add_receiver_callbacks(receiver)
+        sender.send_ready()
         LOGGER.debug(receiver.callbacks)
+
+    attempt = 0
+
+    while not receiver.player_ready or not receiver.enemy_ready:
+        attempt += 1
+        LOGGER.debug("Enemy not ready, trying again, wait {} seconds".format(2 * attempt))
+        time.sleep(2 * attempt)
 
     interface = Interface(game)
 

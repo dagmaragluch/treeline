@@ -13,6 +13,8 @@ class Receiver(threading.Thread):
         self.receiver.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.receiver.bind((sender_address, sender_socket))
         self.receiver.listen(1)
+        self.player_ready = False
+        self.enemy_ready = False
         self.s_socket = None
         self.s_address = None
         self.callbacks = {}
@@ -26,10 +28,13 @@ class Receiver(threading.Thread):
             msg = data.decode()
             if msg == 'OVER':
                 break
-            if msg == '':
+            elif msg == '':
                 LOGGER.debug("Empty msg received")
-            LOGGER.debug("Received %s", msg)
-            self.handle_message(msg)
+            elif msg == 'READY':
+                self.enemy_ready = True
+            else:
+                LOGGER.debug("Received %s", msg)
+                self.handle_message(msg)
 
     def handle_message(self, msg: str):
         words = msg.split(" ")

@@ -243,3 +243,4 @@ class Game:
         receiver.callbacks["REMOVE"] = self.decorators.coords_to_field(self.remove_worker)
         receiver.callbacks["END"] = self.end_turn
         receiver.callbacks["BUILD"] = self.decorators.coords_to_field(self.build)
+        receiver.player_ready = True
