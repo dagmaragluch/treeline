@@ -23,11 +23,13 @@ class Receiver(threading.Thread):
         sender_sock, sender_addr = self.receiver.accept()
         self.s_socket = sender_sock
         self.s_address = sender_addr
-        while True:
+        running = True
+        while running:
             data = self.s_socket.recv(2048)
             msgs = data.decode()
             for msg in msgs.split(";"):
                 if msg == 'OVER':
+                    running = False
                     break
                 elif msg == '':
                     pass
