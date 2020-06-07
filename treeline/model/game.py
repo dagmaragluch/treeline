@@ -220,6 +220,7 @@ class Game:
     def check_win(self, field: Field) -> bool:
         if field == self.players[field.owner].start_field:
             LOGGER.info("Player %d win! :-) ", self._active_player.player_number)
+            self.engine.quit()
             return True
 
     def end_turn(self):

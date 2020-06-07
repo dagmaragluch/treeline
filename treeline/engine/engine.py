@@ -21,7 +21,7 @@ class Engine:
         self.screen = None
         pygame.init()
         pygame.display.set_caption("Treeline")
-        self.running = False
+        self._running = False
         self.camera = Camera((0, 0), fov=16, speed=10)
         self.actors = []
         self.widgets = []
@@ -43,7 +43,7 @@ class Engine:
         load_sprites(scale)
 
     def start(self):
-        self.running = True
+        self._running = True
 
         this_frame_time = datetime.now()
         prev_frame_time = this_frame_time
@@ -53,7 +53,7 @@ class Engine:
         lag_frames = 0
         frame_times = []  # TODO: remove for release
 
-        while self.running:
+        while self._running:
             total_frames += 1
             self.camera.frame()
             viewport = self.camera.get_viewport()
@@ -66,10 +66,10 @@ class Engine:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self._quit()
+                    self.quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self._quit()
+                        self.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_position = pygame.mouse.get_pos()
                 if event.type in self.events:
@@ -115,8 +115,8 @@ class Engine:
         LOGGER.info(f"Lagged frames: {lag_frames} / {total_frames}")
         LOGGER.info(f"Average FPS: {1000 / mean(frame_times)}")
 
-    def _quit(self):
-        self.running = False
+    def quit(self):
+        self._running = False
         LOGGER.info("Stopping engine on demand")
 
     def set_camera(self, camera: Camera):
