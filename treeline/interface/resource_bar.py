@@ -1,16 +1,16 @@
 import pygame
 import pygame.freetype
+from pygame.freetype import Font
 
 from treeline.model.player import Player
-from treeline.engine.widget import Widget
+from treeline.interface.label import Label
 
 
-class ResourceBar(Widget):
-    def __init__(self, player: Player):
-        Widget.__init__(self, (0, 0))
+class ResourceBar(Label):
+    def __init__(self, font: Font, player: Player):
+        Label.__init__(self, (0, 0), font)
         self.player = player
-        self.font = pygame.freetype.SysFont("Comic Sans MS", 24)
 
     def draw(self, surface) -> pygame.Rect:
-        self.font.render_to(surface, self.position, str(self.player.resources), (0, 0, 0))
-        return pygame.Rect(1, 2, 3, 4)
+        self.text = str(self.player.resources)
+        return Label.draw(self, surface)

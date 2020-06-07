@@ -1,12 +1,15 @@
 from typing import Tuple, List, Iterable, Union
 
 from treeline.model.game import Game
+from treeline.model.building import Building
 from treeline.model.building_config import BUILDING_STATS
 from treeline.engine.widget import Widget
 from treeline.interface.button import Button
+from treeline.interface.label import Label
 from treeline.interface.icon import Icon
 from treeline.interface.resource_bar import ResourceBar
 import pygame
+import pygame.freetype
 
 
 class Interface:
@@ -14,6 +17,7 @@ class Interface:
         self.game = game
         game.update_interface_callback = self._on_field_selected
         self.resolution = resolution
+        self.font = pygame.freetype.SysFont("Comic Sans MS", 24)
 
         self._interface_bar = self._create_interface_bar()
         self._end_turn_button = self._create_end_turn_button()
@@ -21,7 +25,8 @@ class Interface:
         self._worker_buttons = self._create_worker_buttons()
         self._building_buttons = self._create_building_buttons()
 
-        self._resource_bar = ResourceBar(game.local_player)
+        self._worker_counter = self._create_worker_counter()
+        self._resource_bar = ResourceBar(self.font, game.local_player)
 
         self.widgets = [
             self._interface_bar,
@@ -29,7 +34,8 @@ class Interface:
             self._take_over_button,
             *self._worker_buttons,
             *self._building_buttons,
-            self._resource_bar
+            self._resource_bar,
+            self._worker_counter,
         ]
 
         self._on_field_selected()
@@ -46,6 +52,8 @@ class Interface:
 
         if selected_field.building:
             self._show_widgets(self._worker_buttons)
+            self._show_widgets(self._worker_counter)
+            self._worker_counter.text = self._get_worker_counter_text(selected_field.building)
             return
         else:
             self._show_widgets(self._building_buttons)
@@ -93,6 +101,15 @@ class Interface:
 
         return [add_worker_button, remove_worker_button]
 
+    def _create_worker_counter(self) -> Label:
+        x = self.resolution[0] * 35 // 100
+        y = self.resolution[1] * 95 // 100
+        return Label((x, y), self.font)
+
+    @staticmethod
+    def _get_worker_counter_text(building: Building):
+        return f"{building.workers} / {building.max_workers}"
+
     def _create_building_buttons(self) -> List[Button]:
         build_buttons = []
         for i, building_type in enumerate(BUILDING_STATS):
@@ -133,4 +150,5 @@ class Interface:
     def _hide_all_context_buttons(self):
         self._hide_widgets(self._take_over_button)
         self._hide_widgets(self._worker_buttons)
+        self._hide_widgets(self._worker_counter)
         self._hide_widgets(self._building_buttons)

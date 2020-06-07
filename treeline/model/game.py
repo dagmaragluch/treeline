@@ -90,6 +90,8 @@ class Game:
         LOGGER.debug("Added worker to field (%d, %d)", field.position[0], field.position[1])
         if self.sender is not None:
             self.sender.send_add_worker(field)
+
+        self.update_interface_callback()
         return True
 
     def remove_worker(self, field: Field) -> bool:
@@ -108,6 +110,8 @@ class Game:
         LOGGER.debug("Removed worker from field (%d, %d)", field.position[0], field.position[1])
         if self.sender is not None:
             self.sender.send_remove_worker(field)
+
+        self.update_interface_callback()
         return True
 
     def _field_clicked(self, field: Field):

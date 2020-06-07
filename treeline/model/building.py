@@ -24,6 +24,8 @@ class Building(Actor):
     ):
         self.cost = cost
         self.valid_terrains = valid_terrains
+        self.workers = 0
+        self.max_workers = 0
         Actor.__init__(self, position, sprite)
 
     def get_resources(self) -> Resources:
