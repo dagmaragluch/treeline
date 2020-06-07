@@ -35,9 +35,9 @@ class Sender:
         LOGGER.debug("Sent %s", msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 
-    def send_start(self, field: Field):
+    def send_start(self, field: Field, player_number: int):
         x, y = field.position
-        msg = "START {} {}".format(x, y)
+        msg = "START {} {} {}".format(x, y, player_number)
         LOGGER.debug("Sent %s", msg)
         self.sender.sendall(bytes(msg, 'UTF-8'))
 

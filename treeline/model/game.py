@@ -39,7 +39,8 @@ class Game:
         self.decorators = Game.Decorators(self.board.get_field)
 
     def start(self):
-        self._set_start_fields()
+        if self.local_player.player_number == 0:
+            self._set_start_fields()
 
     def build(self, field: Field, building_type: str) -> bool:
         if field not in self._active_player.fields:
@@ -59,7 +60,7 @@ class Game:
         self._update_fields_price(building_type, field)
         self.update_interface_callback()
         LOGGER.debug("%s built on field (%d, %d)", building_type, field.position[0], field.position[1])
-        if self.sender is not None:
+        if self._can_send_message():
             self.sender.send_build(building_type, field)
         return True
 
@@ -88,7 +89,7 @@ class Game:
             return False
         self._active_player.available_workers -= 1
         LOGGER.debug("Added worker to field (%d, %d)", field.position[0], field.position[1])
-        if self.sender is not None:
+        if self._can_send_message():
             self.sender.send_add_worker(field)
 
         self.update_interface_callback()
@@ -108,7 +109,7 @@ class Game:
             return False
         self._active_player.available_workers += 1
         LOGGER.debug("Removed worker from field (%d, %d)", field.position[0], field.position[1])
-        if self.sender is not None:
+        if self._can_send_message():
             self.sender.send_remove_worker(field)
 
         self.update_interface_callback()
@@ -140,19 +141,25 @@ class Game:
         border_fields = self.board.get_border_of(self._active_player.fields)
         self._active_player.border.advanced_calculations(border_fields)
 
+    def set_start_field(self, field: Field, player_number: int):
+        self.players[player_number].start_field = field
+        self.players[player_number].border.position = field.position
+        self._update_field_owner(field, self.players[player_number])
+        field.building = building_types["townhall"](field.position)
+        self.engine.add_actor(field.building)
+        self._update_fields_price("townhall", field)
+        if self._can_send_message():
+            self.sender.send_start(field, player_number)
+
     def _set_start_fields(self):
         taken_fields = []
         for player in self.players:
-            self._active_player = player
             start_field = self.board.get_random_start_field(player.player_number)
             while start_field in taken_fields:
                 start_field = self.board.get_random_start_field(player.player_number)
             taken_fields.append(start_field)
-            player.start_field = start_field
-            player.border.position = start_field.position
-            self._update_field_owner(start_field, player)
-            self.build(start_field, "townhall")  # build town hall on start field
-        self._active_player = self.players[0]
+            self.set_start_field(start_field, player.player_number)
+
         self.engine.camera.position = self._active_player.fields[0].position
 
     ''' na razie sprawdza tylko czy pole, które gracz chce przejąć sąsiaduje z min 1 jego polem; 
@@ -186,7 +193,7 @@ class Game:
             self.update_interface_callback()
             LOGGER.debug("Player %d take over field %d, %d", self._active_player.player_number, field.position[0],
                          field.position[1])
-            if self.sender is not None:
+            if self._can_send_message():
                 self.sender.send_take(field)
             return True
         LOGGER.debug("Take over of field %d %d is not possible", field.position[0], field.position[1])
@@ -217,8 +224,11 @@ class Game:
         self._active_player_index = (self._active_player_index + 1) % len(self.players)
         self._active_player = self.players[self._active_player_index]
         LOGGER.info("Next turn for player %d", self._active_player.player_number)
-        if self.sender is not None:
+        if self._can_send_message():
             self.sender.send_end_turn()
+            
+    def _can_send_message(self):
+        return self.sender and self._active_player is self.local_player
 
     @property
     def selected_field(self):
@@ -247,4 +257,5 @@ class Game:
         receiver.callbacks["REMOVE"] = self.decorators.coords_to_field(self.remove_worker)
         receiver.callbacks["END"] = self.end_turn
         receiver.callbacks["BUILD"] = self.decorators.coords_to_field(self.build)
+        receiver.callbacks["START"] = self.decorators.coords_to_field(self.set_start_field)
         receiver.player_ready = True
