@@ -21,10 +21,11 @@ if __name__ == '__main__':
     your_port = None
     p2_port = None
 
-    online = False
+    online = True
     receiver = None
     sender = None
     attempt = 0
+    player_number = 0
 
     if online:
         addr = "127.0.0.1"
@@ -40,6 +41,7 @@ if __name__ == '__main__':
             sender = Sender(addr, p2_port)
             break
         except ConnectionRefusedError:
+            player_number = 1
             LOGGER.debug("Connection refused, trying again, wait {} seconds".format(attempt * 5))
 
         time.sleep(attempt * 5)
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     engine = Engine()
     board = Board("./resources/maps/map2.csv")
     players = [Player(), Player()]
-    game = Game(board, players, 0, sender, engine)
+    game = Game(board, players, player_number, sender, engine)
 
     if receiver is not None:
         game.add_receiver_callbacks(receiver)
