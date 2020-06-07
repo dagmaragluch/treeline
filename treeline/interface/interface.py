@@ -49,7 +49,7 @@ class Interface:
             return
 
     def _create_end_turn_button(self) -> Button:
-        image = pygame.image.load("./resources/graphics/buttons/end-turn.bmp")
+        image = pygame.image.load("./resources/graphics/buttons/end_turn.bmp")
         x = self.resolution[0] * 4 // 5
         y = self.resolution[1] * 9 // 10
 
@@ -66,7 +66,7 @@ class Interface:
         return Button((x, y), image, take_over_callback)
 
     def _create_worker_buttons(self) -> List[Button]:
-        add_image = pygame.image.load("./resources/graphics/buttons/add-worker.bmp")
+        add_image = pygame.image.load("./resources/graphics/buttons/add_worker.bmp")
         x = self.resolution[0] * 9 // 10
         y = self.resolution[1] * 2 // 8
 
@@ -74,7 +74,7 @@ class Interface:
             return self.game.add_worker(self.game.selected_field)
         add_worker_button = Button((x, y), add_image, add_worker_callback)
 
-        remove_image = pygame.image.load("./resources/graphics/buttons/remove-worker.bmp")
+        remove_image = pygame.image.load("./resources/graphics/buttons/remove_worker.bmp")
         x = self.resolution[0] * 9 // 10
         y = self.resolution[1] * 1 // 8
 
@@ -91,13 +91,15 @@ class Interface:
             x = self.resolution[0] * 1//10 + 100 * i
             y = self.resolution[1] * 9 // 10
 
-            def build_callback():
-                return self.game.build(self.game.selected_field, building_type)
-
-            build_button = Button((x, y), image, build_callback)
+            build_button = Button((x, y), image, self._build_callback_wrapper(building_type))
             build_buttons.append(build_button)
 
         return build_buttons
+
+    def _build_callback_wrapper(self, building_type) -> callable:
+        def build_callback():
+            return self.game.build(self.game.selected_field, building_type)
+        return build_callback
 
     @staticmethod
     def _show_widgets(widgets: Union[Widget, Iterable[Widget]]):

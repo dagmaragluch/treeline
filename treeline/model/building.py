@@ -135,8 +135,8 @@ class House(ProductionBuilding):
 
 class TownHall(DefensiveBuilding):
     def __init__(self, position: Tuple[int, int]):
-        stats = config.BUILDING_STATS["town_hall"]
-        DefensiveBuilding.__init__(self, position=position, sprite=sprites["town_hall"], **stats)
+        stats = config.BUILDING_STATS["townhall"]
+        DefensiveBuilding.__init__(self, position=position, sprite=sprites["townhall"], **stats)
 
 
 class Tower(DefensiveBuilding):
@@ -150,6 +150,6 @@ building_types = {
     "sawmill": Sawmill,
     "iron_mine": IronMine,
     "house": House,
-    "town_hall": TownHall,
+    "townhall": TownHall,
     "tower": Tower,
 }

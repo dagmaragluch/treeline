@@ -32,7 +32,7 @@ BUILDING_STATS = {
         "max_workers": 2,
         "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
     },
-    "town_hall": {
+    "townhall": {
         "cost": Resources(),
         "valid_terrains": [Terrain.grass, Terrain.forest, Terrain.mountain],
     },

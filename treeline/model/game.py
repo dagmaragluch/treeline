@@ -63,7 +63,7 @@ class Game:
 
     # increase in the price of field with tower and its neighbours
     def _update_fields_price(self, building_type: str, field: Field):
-        if building_type == "tower" or building_type == "town_hall":
+        if building_type == "tower" or building_type == "townhall":
             fields_to_update = self.board.get_neighbours(field)
             fields_to_update.append(field)
             for f in fields_to_update:
@@ -145,7 +145,7 @@ class Game:
             player.start_field = start_field
             player.border.position = start_field.position
             self._update_field_owner(start_field, player)
-            self.build(start_field, "town_hall")  # build town hall on start field
+            self.build(start_field, "townhall")  # build town hall on start field
         self._active_player = self.players[0]
         self.engine.camera.position = self._active_player.fields[0].position
 
