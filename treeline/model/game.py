@@ -51,6 +51,9 @@ class Game:
             return False
 
         building = building_types[building_type](field.position)
+        if field.terrain not in building.valid_terrains:
+            LOGGER.debug("%s is not valid terrain for %s", field.terrain.name, building_type)
+            return False
         try:
             self._active_player.resources -= building.cost
         except NegativeResourceError:
