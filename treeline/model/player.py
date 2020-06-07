@@ -11,6 +11,12 @@ from treeline.model.border import Border
 LOGGER = logging.getLogger(__name__)
 
 
+player_colors = [
+    (200, 0, 0),
+    (0, 0, 200)
+]
+
+
 class Player:
     current_number = 0
 
@@ -22,4 +28,4 @@ class Player:
         self.available_workers = 10
         self.total_workers = 10
         self.start_field = None
-        self.border = Border()
+        self.border = Border(player_colors[self.player_number])

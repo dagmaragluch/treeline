@@ -10,10 +10,11 @@ d30 = radians(30)
 _ROTATE_RIGHT = np.array([[cos(d30), -sin(d30)], [sin(d30), cos(d30)]])
 _ROTATE_LEFT = np.array([[cos(-d30), -sin(-d30)], [sin(-d30), cos(-d30)]])
 
+
 class Border(Actor):
 
-    def __init__(self):
-        Actor.__init__(self, (0, 0), Path((200, 0, 0)))
+    def __init__(self, color: Tuple[int, int, int]):
+        Actor.__init__(self, (0, 0), Path(color))
 
     def advanced_calculations(self, border_fields: List[Field]):
         border = []
