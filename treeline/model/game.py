@@ -170,7 +170,7 @@ class Game:
                 start_field = self.board.get_random_start_field(player.player_number)
             taken_fields.append(start_field)
             self.set_start_field(start_field, player.player_number)
-            time.sleep(100)
+            time.sleep(0.1)
 
         self.engine.camera.position = self._active_player.fields[0].position
 
