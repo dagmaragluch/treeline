@@ -17,7 +17,7 @@ LOGGER = logging.getLogger(__name__)
 
 if __name__ == '__main__':
 
-    addr = None
+    enemy_addr = None
     your_port = None
     p2_port = None
 
@@ -28,17 +28,17 @@ if __name__ == '__main__':
     player_number = 0
 
     if online:
-        addr = "127.0.0.1"
+        enemy_addr = input("Enemy IP address: ")
         your_port = int(input("Your port: "))  # TODO: Fix popup window
         p2_port = int(input("Type second player's port: "))
-        receiver = Receiver(addr, your_port)
+        receiver = Receiver("127.0.0.1", your_port)
         receiver.start()
 
     while online:
         attempt += 1
 
         try:
-            sender = Sender(addr, p2_port)
+            sender = Sender(enemy_addr, p2_port)
             break
         except ConnectionRefusedError:
             player_number = 1
