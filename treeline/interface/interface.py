@@ -4,6 +4,7 @@ from treeline.model.game import Game
 from treeline.model.building_config import BUILDING_STATS
 from treeline.engine.widget import Widget
 from treeline.interface.button import Button
+from treeline.interface.icon import Icon
 from treeline.interface.resource_bar import ResourceBar
 import pygame
 
@@ -14,6 +15,7 @@ class Interface:
         game.update_interface_callback = self._on_field_selected
         self.resolution = resolution
 
+        self._interface_bar = self._create_interface_bar()
         self._end_turn_button = self._create_end_turn_button()
         self._take_over_button = self._create_take_over_button()
         self._worker_buttons = self._create_worker_buttons()
@@ -22,6 +24,7 @@ class Interface:
         self._resource_bar = ResourceBar(game.local_player)
 
         self.widgets = [
+            self._interface_bar,
             self._end_turn_button,
             self._take_over_button,
             *self._worker_buttons,
@@ -48,17 +51,23 @@ class Interface:
             self._show_widgets(self._building_buttons)
             return
 
-    def _create_end_turn_button(self) -> Button:
-        image = pygame.image.load("./resources/graphics/buttons/end_turn.bmp")
-        x = self.resolution[0] * 4 // 5
+    def _create_interface_bar(self) -> Icon:
+        image = pygame.image.load("./resources/graphics/buttons/bar.png")
+        x = 0
         y = self.resolution[1] * 9 // 10
+        return Icon((x, y), image)
+
+    def _create_end_turn_button(self) -> Button:
+        image = pygame.image.load("./resources/graphics/buttons/end_turn.png")
+        x = self.resolution[0] * 85 // 100
+        y = self.resolution[1] * 93 // 100
 
         return Button((x, y), image, self.game.end_turn)
 
     def _create_take_over_button(self):
-        image = pygame.image.load("./resources/graphics/buttons/take_over.bmp")
-        x = self.resolution[0] * 7 // 10
-        y = self.resolution[1] * 9 // 10
+        image = pygame.image.load("./resources/graphics/buttons/take_over.png")
+        x = self.resolution[0] * 2 // 10
+        y = self.resolution[1] * 93 // 100
 
         def take_over_callback():
             return self.game.take_over_field(self.game.selected_field)
@@ -66,17 +75,17 @@ class Interface:
         return Button((x, y), image, take_over_callback)
 
     def _create_worker_buttons(self) -> List[Button]:
-        add_image = pygame.image.load("./resources/graphics/buttons/add_worker.bmp")
-        x = self.resolution[0] * 9 // 10
-        y = self.resolution[1] * 2 // 8
+        add_image = pygame.image.load("./resources/graphics/buttons/add_worker.png")
+        x = self.resolution[0] * 25 // 100
+        y = self.resolution[1] * 93 // 100
 
         def add_worker_callback():
             return self.game.add_worker(self.game.selected_field)
         add_worker_button = Button((x, y), add_image, add_worker_callback)
 
-        remove_image = pygame.image.load("./resources/graphics/buttons/remove_worker.bmp")
-        x = self.resolution[0] * 9 // 10
-        y = self.resolution[1] * 1 // 8
+        remove_image = pygame.image.load("./resources/graphics/buttons/remove_worker.png")
+        x = self.resolution[0] * 3 // 10
+        y = self.resolution[1] * 93 // 100
 
         def remove_worker_callback():
             return self.game.remove_worker(self.game.selected_field)
@@ -87,9 +96,11 @@ class Interface:
     def _create_building_buttons(self) -> List[Button]:
         build_buttons = []
         for i, building_type in enumerate(BUILDING_STATS):
+            if building_type == "townhall":  # cannot build townhall
+                continue
             image = pygame.image.load(f"./resources/graphics/buttons/{building_type}.png")
             x = self.resolution[0] * 1//10 + 100 * i
-            y = self.resolution[1] * 9 // 10
+            y = self.resolution[1] * 95 // 100
 
             build_button = Button((x, y), image, self._build_callback_wrapper(building_type))
             build_buttons.append(build_button)

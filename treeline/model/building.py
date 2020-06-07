@@ -6,7 +6,6 @@ from typing import (
 
 from treeline.model.resource import (
     Resources,
-    ResourceType,
 )
 from treeline.model.field import Terrain
 from treeline.model import building_config as config
@@ -93,10 +92,8 @@ class Farm(ProductionBuilding):
         ProductionBuilding.__init__(self, position=position, sprite=sprites["farm"], **stats)
 
     def get_resources(self) -> Resources:
-        resources = Resources()
         food_produced = self.workers * 1
-        resources.add_resource(ResourceType.food, food_produced)
-        return resources
+        return Resources.from_dictionary({"food": food_produced})
 
 
 class Sawmill(ProductionBuilding):
@@ -105,10 +102,8 @@ class Sawmill(ProductionBuilding):
         ProductionBuilding.__init__(self, position=position, sprite=sprites["sawmill"], **stats)
 
     def get_resources(self) -> Resources:
-        resources = Resources()
         wood_produced = self.workers * 2
-        resources.add_resource(ResourceType.wood, wood_produced)
-        return resources
+        return Resources.from_dictionary({"wood": wood_produced})
 
 
 class IronMine(ProductionBuilding):
@@ -117,10 +112,8 @@ class IronMine(ProductionBuilding):
         ProductionBuilding.__init__(self, position=position, sprite=sprites["iron_mine"], **stats)
 
     def get_resources(self) -> Resources:
-        resources = Resources()
         iron_produced = self.workers * 1
-        resources.add_resource(ResourceType.iron, iron_produced)
-        return resources
+        return Resources.from_dictionary({"iron": iron_produced})
 
 
 class House(ProductionBuilding):

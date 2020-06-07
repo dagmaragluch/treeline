@@ -10,7 +10,6 @@ BUILDING_PATH = f"{GRAPHICS_PATH}/buildings"
 _paths = {
     "grass": f"{TERRAIN_PATH}/grass.png",
     "grass_highlight": f"{TERRAIN_PATH}/grass_highlight.png",
-    "grass_red": f"{TERRAIN_PATH}/forest_red.png",  # TODO
     "forest": f"{TERRAIN_PATH}/forest.png",
     "forest_highlight": f"{TERRAIN_PATH}/forest_highlight.png",
     "mountain": f"{TERRAIN_PATH}/mountain.png",
